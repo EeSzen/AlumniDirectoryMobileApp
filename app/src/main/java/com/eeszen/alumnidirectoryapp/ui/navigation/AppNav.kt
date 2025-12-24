@@ -5,16 +5,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.eeszen.alumnidirectoryapp.ui.screens.home.HomeScreen
+import com.eeszen.alumnidirectoryapp.ui.screens.registration.RegisterScreen
 
 @Composable
 fun AppNav(){
     val navController = rememberNavController()
     NavHost(
-        startDestination = Screen.Home,
+        startDestination = Screen.Register,
         navController = navController
     ) {
         composable<Screen.Home> {
             HomeScreen()
+        }
+        composable<Screen.Register> {
+            RegisterScreen()
         }
     }
 }
