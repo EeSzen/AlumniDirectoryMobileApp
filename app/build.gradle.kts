@@ -79,9 +79,9 @@ dependencies {
 //    // Compose
 //    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.4")
 
-//    // Icons
-//    implementation("androidx.compose.material:material-icons-core:1.7.8")
-//    implementation("androidx.compose.material:material-icons-extended:1.7.8")
+    // Icons
+    implementation("androidx.compose.material:material-icons-core:1.7.8")
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 
     // Navigation
     implementation("androidx.navigation3:navigation3-runtime:1.0.0")
