@@ -35,7 +35,6 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
@@ -127,7 +126,7 @@ fun ProfileScreen(
                 Spacer(Modifier.height(16.dp))
                 HorizontalDivider(
                     thickness = 1.dp,
-                    color = Color.LightGray
+                    color = Color.Gray
                 )
                 Spacer(Modifier.height(16.dp))
                 BasicInfo()
@@ -136,7 +135,7 @@ fun ProfileScreen(
                 Spacer(Modifier.height(16.dp))
                 HorizontalDivider(
                     thickness = 1.dp,
-                    color = Color.LightGray
+                    color = Color.Gray
                 )
                 Spacer(Modifier.height(16.dp))
                 FlowRow(
