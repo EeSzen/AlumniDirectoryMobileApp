@@ -12,10 +12,10 @@ import com.eeszen.alumnidirectoryapp.ui.screens.registration.RegisterScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.splash.SplashScreen
 
 @Composable
-fun AppNav(){
+fun AppNav() {
     val navController = rememberNavController()
     NavHost(
-        startDestination = Screen.AdminDashboard,
+        startDestination = Screen.Register,
         navController = navController
     ) {
         composable<Screen.Home> {
@@ -23,17 +23,18 @@ fun AppNav(){
         }
         composable<Screen.Register> {
             RegisterScreen()
-        composable<Screen.Splash> {
-            SplashScreen(navController)
-        }
-        composable<Screen.Profile> {
-            ProfileScreen(navController)
-        }
-        composable<Screen.EditProfile> {
-            EditProfileScreen(navController)
-        }
-        composable<Screen.AdminDashboard> {
-            AdminDashboardScreen(navController)
+            composable<Screen.Splash> {
+                SplashScreen(navController)
+            }
+            composable<Screen.Profile> {
+                ProfileScreen(navController)
+            }
+            composable<Screen.EditProfile> {
+                EditProfileScreen(navController)
+            }
+            composable<Screen.AdminDashboard> {
+                AdminDashboardScreen(navController)
+            }
         }
     }
 }
