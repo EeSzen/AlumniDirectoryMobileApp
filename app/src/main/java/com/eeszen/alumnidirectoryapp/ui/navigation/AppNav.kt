@@ -8,6 +8,7 @@ import com.eeszen.alumnidirectoryapp.ui.screens.admin.AdminDashboardScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.home.HomeScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.profile.EditProfileScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.profile.ProfileScreen
+import com.eeszen.alumnidirectoryapp.ui.screens.registration.RegisterScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.splash.SplashScreen
 
 @Composable
@@ -20,6 +21,8 @@ fun AppNav(){
         composable<Screen.Home> {
             HomeScreen(navController)
         }
+        composable<Screen.Register> {
+            RegisterScreen()
         composable<Screen.Splash> {
             SplashScreen(navController)
         }
