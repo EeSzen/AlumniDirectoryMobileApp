@@ -27,7 +27,7 @@ data class User (
 
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()
-)
+)   
 enum class Status {
     PENDING, APPROVED, REJECTED, INACTIVE
 }
