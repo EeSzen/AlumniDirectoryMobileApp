@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.eeszen.alumnidirectoryapp.ui.screens.admin.AdminDashboardScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.home.HomeScreen
-import com.eeszen.alumnidirectoryapp.ui.screens.auth.LoginScreen
+import com.eeszen.alumnidirectoryapp.ui.screens.auth.login.LoginScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.auth.RegisterScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.profile.EditProfileScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.profile.ProfileScreen
@@ -16,7 +16,7 @@ import com.eeszen.alumnidirectoryapp.ui.screens.splash.SplashScreen
 fun AppNav() {
     val navController = rememberNavController()
     NavHost(
-        startDestination = Screen.Register,
+        startDestination = Screen.Login,
         navController = navController
     ) {
         composable<Screen.Home> {
