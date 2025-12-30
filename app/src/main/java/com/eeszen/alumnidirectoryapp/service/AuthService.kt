@@ -8,16 +8,18 @@ import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialException
 import com.eeszen.alumnidirectoryapp.data.model.AuthUser
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import jakarta.inject.Inject
+import jakarta.inject.Singleton
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.tasks.await
 
-class AuthService private constructor() {
+@Singleton
+class AuthService @Inject constructor() {
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val _authuser = MutableStateFlow<AuthUser?>(null)
     val authuser = _authuser.asStateFlow()
@@ -50,21 +52,24 @@ class AuthService private constructor() {
         return result.user
     }
 
-
     // Google
-    suspend fun signInWithGoogle(context:Context){
-        try {
+    suspend fun signInWithGoogle(context:Context): Boolean {
+        return try {
             val token = getGoogleCredential(context)
             val credential = GoogleAuthProvider.getCredential(token,null)
             val result = firebaseAuth.signInWithCredential(credential).await()
 
             result.user?.let { updateUser(it)}
+            result.user != null
         }catch (e:GetCredentialCancellationException){
             Log.d("AuthService","Sign-in was cancelled",e)
+            false
         }catch (e: GetCredentialException){
             Log.d("AuthService","Google Sign-in failed",e)
+            false
         }catch (e:Exception){
             Log.d("AuthService","Sign-in failed",e)
+            false
         }
     }
 
