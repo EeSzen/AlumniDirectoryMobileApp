@@ -9,4 +9,6 @@ sealed class Screen{
     @Serializable data object Splash:Screen()
     @Serializable data object Login:Screen()
     @Serializable data object Profile:Screen()
+    @Serializable data object EditProfile:Screen()
+    @Serializable data object AdminDashboard:Screen()
 }
