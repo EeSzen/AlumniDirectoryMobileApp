@@ -9,7 +9,8 @@ import androidx.navigation.compose.rememberNavController
 import com.eeszen.alumnidirectoryapp.ui.screens.admin.AdminDashboardScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.home.HomeScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.auth.login.LoginScreen
-import com.eeszen.alumnidirectoryapp.ui.screens.auth.RegisterScreen
+import com.eeszen.alumnidirectoryapp.ui.screens.auth.register.RegisterFormScreen
+import com.eeszen.alumnidirectoryapp.ui.screens.auth.register.RegisterScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.profile.EditProfileScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.profile.ProfileScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.splash.SplashScreen
@@ -25,7 +26,10 @@ fun AppNav(navController: NavHostController) {
             HomeScreen(navController)
         }
         composable<Screen.Register> {
-            RegisterScreen()
+            RegisterScreen(navController)
+        }
+        composable<Screen.RegisterForm> {
+            RegisterFormScreen(navController)
         }
         composable<Screen.Splash> {
             SplashScreen(navController)
