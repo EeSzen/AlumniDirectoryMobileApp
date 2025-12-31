@@ -1,5 +1,7 @@
 package com.eeszen.alumnidirectoryapp.core.di
 
+import com.eeszen.alumnidirectoryapp.data.repo.AlumniRepo
+import com.eeszen.alumnidirectoryapp.data.repo.AlumniRepoFireImpl
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -14,5 +16,10 @@ class AppModule {
     @Singleton
     fun provideAuthService(): FirebaseAuth {
         return FirebaseAuth.getInstance()
+    }
+    @Provides
+    @Singleton
+    fun provideRepo(): AlumniRepo {
+        return AlumniRepoFireImpl()
     }
 }

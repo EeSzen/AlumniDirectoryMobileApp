@@ -31,9 +31,9 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ComposeApp(){
-    Scaffold(modifier = Modifier.fillMaxSize()) {
-//        Box(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
+    Scaffold(modifier = Modifier.fillMaxSize()) {innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
             AppNav()
-//        }
+        }
     }
 }

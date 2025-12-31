@@ -1,14 +1,11 @@
 package com.eeszen.alumnidirectoryapp.data.repo
 
-
 import android.util.Log
 import com.eeszen.alumnidirectoryapp.data.model.User
 import com.eeszen.alumnidirectoryapp.service.AuthService
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
@@ -17,10 +14,10 @@ class AlumniRepoFireImpl:AlumniRepo {
     val authService = AuthService.getInstance()
 
     private fun getAlumnisCollection():CollectionReference{
-        val user = authService.getCurrentUser()
+//        val user = authService.getCurrentUser()
 //        if (user == null) throw Exception("User doesn't exist")
-        require(user != null){ "User doesn't exist" }
-        return db.collection("users/${user.uid}")
+//        require(user != null){ "User doesn't exist" }
+        return db.collection("users")
     }
 
     override suspend fun getAllAlumnis(): List<User> {
@@ -68,7 +65,7 @@ class AlumniRepoFireImpl:AlumniRepo {
 
     override suspend fun addAlumni(user: User) {
         getAlumnisCollection()
-            .add(user).await()
+            .document(user.id).set(user).await()
     }
 
     override suspend fun deleteAlumni(id: String) {
