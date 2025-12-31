@@ -1,6 +1,8 @@
 package com.eeszen.alumnidirectoryapp.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -13,8 +15,8 @@ import com.eeszen.alumnidirectoryapp.ui.screens.profile.ProfileScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.splash.SplashScreen
 
 @Composable
-fun AppNav() {
-    val navController = rememberNavController()
+fun AppNav(navController: NavHostController) {
+//    val navController = rememberNavController()
     NavHost(
         startDestination = Screen.Login,
         navController = navController
