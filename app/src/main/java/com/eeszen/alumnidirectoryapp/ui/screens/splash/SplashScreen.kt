@@ -20,18 +20,18 @@ import com.eeszen.alumnidirectoryapp.ui.navigation.Screen
 fun SplashScreen(
     navController: NavController
 ) {
-//    LaunchedEffect(Unit) {
-//        val nextScreen = if (AuthService.getInstance().getCurrentUser() != null) {
-//            Screen.Home
-//        } else {
-//            Screen.Login
-//        }
-//        navController.navigate(nextScreen) {
-//            popUpTo(Screen.Splash) {
-//                inclusive = true
-//            }
-//        }
-//    }
+    LaunchedEffect(Unit) {
+        val nextScreen = if (AuthService.getInstance().getCurrentUser() != null) {
+            Screen.Home
+        } else {
+            Screen.Login
+        }
+        navController.navigate(nextScreen) {
+            popUpTo(Screen.Splash) {
+                inclusive = true
+            }
+        }
+    }
 
     Box(
         modifier = Modifier.fillMaxSize(),
