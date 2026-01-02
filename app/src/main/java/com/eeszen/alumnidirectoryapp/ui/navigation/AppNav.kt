@@ -1,11 +1,9 @@
 package com.eeszen.alumnidirectoryapp.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.eeszen.alumnidirectoryapp.ui.screens.admin.AdminDashboardScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.home.HomeScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.auth.login.LoginScreen
@@ -16,34 +14,43 @@ import com.eeszen.alumnidirectoryapp.ui.screens.profile.ProfileScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.splash.SplashScreen
 
 @Composable
-fun AppNav(navController: NavHostController) {
-//    val navController = rememberNavController()
+fun AppNav(
+    navController: NavHostController,
+    onTitleChange: (String) -> Unit
+) {
     NavHost(
         startDestination = Screen.Login,
         navController = navController
     ) {
         composable<Screen.Home> {
+            onTitleChange("Home")
             HomeScreen(navController)
         }
         composable<Screen.Register> {
+            onTitleChange("Register")
             RegisterScreen(navController)
         }
         composable<Screen.RegisterForm> {
+            onTitleChange("Register Form")
             RegisterFormScreen(navController)
         }
         composable<Screen.Splash> {
             SplashScreen(navController)
         }
         composable<Screen.Login> {
+            onTitleChange("Login")
             LoginScreen(navController)
         }
         composable<Screen.AdminDashboard> {
+            onTitleChange("Admin Dashboard")
             AdminDashboardScreen(navController)
         }
         composable<Screen.EditProfile> {
+            onTitleChange("Edit Profile")
             EditProfileScreen(navController)
         }
         composable<Screen.Profile> {
+            onTitleChange("Profile")
             ProfileScreen(navController)
         }
     }
