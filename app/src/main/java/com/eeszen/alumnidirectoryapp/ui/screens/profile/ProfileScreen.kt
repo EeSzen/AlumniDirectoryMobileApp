@@ -48,6 +48,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.eeszen.alumnidirectoryapp.R
 import com.eeszen.alumnidirectoryapp.data.model.User
+import com.eeszen.alumnidirectoryapp.ui.navigation.Screen
 import com.eeszen.alumnidirectoryapp.ui.screens.profile.components.SkillsTagItem
 
 @Composable
@@ -80,7 +81,7 @@ fun ProfileScreen(
                     if(user.id == loggedInUser?.uid) {
                         // Edit button
                         IconButton(
-                            onClick = {},
+                            onClick = { navController.navigate(Screen.EditProfile) },
                             modifier = Modifier.align(Alignment.TopEnd)
                         ) {
                             Icon(
