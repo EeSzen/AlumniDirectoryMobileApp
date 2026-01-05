@@ -143,7 +143,7 @@ fun RegisterFormScreen(
             ) {
                 OutlinedTextField(
                     value = gradYear,
-                    onValueChange = {},
+                    onValueChange = { gradYear = it },
                     readOnly = true,
                     label = { Text("Batch (year)") },
                     trailingIcon = {
@@ -170,7 +170,6 @@ fun RegisterFormScreen(
                 }
             }
 
-            Spacer(Modifier.height(12.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -203,8 +202,6 @@ fun RegisterFormScreen(
                     )
                 }
             }
-
-            Spacer(Modifier.height(12.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

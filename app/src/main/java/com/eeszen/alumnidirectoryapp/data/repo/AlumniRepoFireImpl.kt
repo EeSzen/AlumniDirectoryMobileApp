@@ -1,6 +1,7 @@
 package com.eeszen.alumnidirectoryapp.data.repo
 
 import android.util.Log
+import com.eeszen.alumnidirectoryapp.data.model.Status
 import com.eeszen.alumnidirectoryapp.data.model.User
 import com.eeszen.alumnidirectoryapp.service.AuthService
 import com.google.firebase.firestore.CollectionReference
@@ -76,5 +77,64 @@ class AlumniRepoFireImpl:AlumniRepo {
     override suspend fun updateAlumni(id: String, user: User) {
         getAlumnisCollection().document(id)
             .set(user).await()
+    }
+
+    override suspend fun getApprovedAlumnis(): List<User> {
+        return try{
+            val snapshot = getAlumnisCollection()
+                .whereEqualTo("status", Status.APPROVED.name)
+                .get().await()
+            snapshot.documents.mapNotNull {
+                it.toObject(User::class.java)
+                    ?.copy(id=it.id)
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+            emptyList()
+        }
+    }
+
+    override suspend fun getPendingAlumnis(): List<User> {
+        return try{
+            val snapshot = getAlumnisCollection()
+                .whereEqualTo("status", Status.PENDING.name)
+                .get().await()
+            snapshot.documents.mapNotNull {
+                it.toObject(User::class.java)
+                    ?.copy(id=it.id)
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+            emptyList()
+        }
+    }
+
+    override suspend fun getRejectedAlumnis(): List<User> {
+        return try{
+            val snapshot = getAlumnisCollection()
+                .whereEqualTo("status", Status.REJECTED.name)
+                .get().await()
+            snapshot.documents.mapNotNull {
+                it.toObject(User::class.java)
+                    ?.copy(id=it.id)
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+            emptyList()
+        }
+    }
+
+    override suspend fun updateUserStatus(
+        id: String,
+        status: Status
+    ) {
+        try {
+            getAlumnisCollection()
+                .document(id)
+                .update("status", status.name)
+                .await()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
