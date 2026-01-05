@@ -22,7 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.eeszen.alumnidirectoryapp.ui.components.header.Header
 import com.eeszen.alumnidirectoryapp.ui.navigation.Screen
 import com.eeszen.alumnidirectoryapp.ui.screens.auth.composables.EmailPassAuth
 
@@ -54,10 +53,6 @@ fun LoginScreen(
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Header(
-            "Login",
-            modifier = Modifier.align(Alignment.TopCenter)
-        )
         Column(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally

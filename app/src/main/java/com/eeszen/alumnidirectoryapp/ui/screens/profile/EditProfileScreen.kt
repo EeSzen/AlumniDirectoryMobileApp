@@ -6,26 +6,27 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,13 +35,53 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditProfileScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: EditProfileViewModel = hiltViewModel()
 ) {
+    val user = viewModel.user.collectAsStateWithLifecycle().value
+    LaunchedEffect(Unit) {
+        viewModel.getUser()
+    }
     var fullName by remember { mutableStateOf("") }
+    var department by remember { mutableStateOf("") }
+    var jobTitle by remember { mutableStateOf("") }
+    var company by remember { mutableStateOf("") }
+    var techStack by remember { mutableStateOf("") }
+    var city by remember { mutableStateOf("") }
+    var contactPref by remember { mutableStateOf("") }
+    var shortBio by remember { mutableStateOf("") }
+
+    LaunchedEffect(user) {
+        fullName = user.fullName
+        department = user.department
+        jobTitle = user.currentJob
+        company = user.currentCompany
+        techStack = user.primaryTechStack
+        city = user.currentCity
+        contactPref = user.contactPreference
+        shortBio = user.shortBio
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.success.collect {
+            navController.popBackStack()
+        }
+    }
+
+    val startYear = 1800
+    val endYear = 2025
+
+    // Country dropdown
+    val countries = listOf("United States", "Canada", "United Kingdom", "India", "Germany", "Australia", "Singapore", "Japan")
+    var countryExpanded by remember { mutableStateOf(false) }
+    var country by remember { mutableStateOf(user.currentCountry) }
 
     Box(
         modifier = Modifier
@@ -48,167 +89,226 @@ fun EditProfileScreen(
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
-        LazyColumn(
+        Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Box(
+                    modifier = Modifier.size(100.dp),
+                    contentAlignment = Alignment.TopCenter
                 ) {
-                    Box(
-                        modifier = Modifier.size(100.dp),
-                        contentAlignment = Alignment.TopCenter
+                    // Avatar
+                    Icon(
+                        modifier = Modifier
+                            .size(100.dp)
+                            .background(color = Color.White, shape = CircleShape),
+                        imageVector = Icons.Default.AccountCircle,
+                        contentDescription = "",
+                        tint = Color.Black,
+                    )
+                    // Camera button
+                    IconButton(
+                        onClick = {},
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .offset(x = 30.dp, y = 4.dp)
                     ) {
-                        // Avatar
-                        Icon(
+                        Box(
                             modifier = Modifier
-                                .size(100.dp)
-                                .background(color = Color.White, shape = CircleShape),
-                            imageVector = Icons.Default.AccountCircle,
-                            contentDescription = "",
-                            tint = Color.Black,
-                        )
-                        // Camera button
-                        IconButton(
-                            onClick = {},
-                            modifier = Modifier
-                                .align(Alignment.BottomCenter)
-                                .offset(x = 30.dp, y = 4.dp)
+                                .background(Color.White, CircleShape)
+                                .border(1.dp, Color.DarkGray, CircleShape)
+                                .padding(6.dp)
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .background(Color.White, CircleShape)
-                                    .border(1.dp, Color.DarkGray, CircleShape)
-                                    .padding(6.dp)
-                            ) {
-                                Icon(
-                                    Icons.Outlined.CameraAlt,
-                                    "",
-                                    tint = Color.Cyan,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
+                            Icon(
+                                Icons.Outlined.CameraAlt,
+                                "",
+                                tint = Color.Cyan,
+                                modifier = Modifier.size(20.dp)
+                            )
                         }
                     }
                 }
-                Spacer(Modifier.height(16.dp))
-                Text(
-                    text = "Full Name",
-                    style = MaterialTheme.typography.titleLarge
-                )
+
+            }
+            OutlinedTextField(
+                value = fullName,
+                onValueChange = { fullName = it },
+                label = { Text("Full name") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+            OutlinedTextField(
+                value = department,
+                onValueChange = { department = it },
+                label = { Text("Department / Major") },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            // Graduation year
+            val years = mutableListOf<Int>()
+            for (i in startYear..endYear){
+                years.add(i)
+            }
+            var yearExpanded by remember { mutableStateOf(false) }
+            var gradYear by remember { mutableStateOf("") }
+
+            ExposedDropdownMenuBox(
+                expanded = yearExpanded,
+                onExpandedChange = { yearExpanded = !yearExpanded }
+            ) {
                 OutlinedTextField(
-                    value = fullName,
-                    onValueChange = {},
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("Full Name") },
-                    singleLine = true
+                    value = gradYear,
+                    onValueChange = { gradYear = it },
+                    readOnly = true,
+                    label = { Text("Batch (year)") },
+                    trailingIcon = {
+                        Icon(Icons.Filled.ArrowDropDown, null)
+                    },
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth()
                 )
-                Spacer(Modifier.height(16.dp))
-                Text(
-                    text = "Email",
-                    style = MaterialTheme.typography.titleLarge
-                )
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
-                    placeholder = { Text("Email") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
-                Spacer(Modifier.height(16.dp))
-                Text(
-                    text = "Department / Major",
-                    style = MaterialTheme.typography.titleLarge
-                )
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
-                    placeholder = { Text("Department / Major") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
-                Spacer(Modifier.height(16.dp))
-                Text(
-                    text = "Batch (year)",
-                    style = MaterialTheme.typography.titleLarge
-                )
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
-                    placeholder = { Text("Batch (year)") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
-                Spacer(Modifier.height(16.dp))
-                Text(
-                    text = "Current job",
-                    style = MaterialTheme.typography.titleLarge
-                )
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
-                    placeholder = { Text("Current job") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
-                Spacer(Modifier.height(16.dp))
-                Text(
-                    text = "Current company",
-                    style = MaterialTheme.typography.titleLarge
-                )
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
-                    placeholder = { Text("Current company") },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
-                )
-                Spacer(Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
-                )
-                {
-                    Column(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            text = "Current city",
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                        OutlinedTextField(
-                            value = "",
-                            onValueChange = {},
-                            placeholder = { Text("Current city") },
-                            modifier = Modifier.fillMaxWidth(),
-                            singleLine = true
-                        )
-                    }
-                    Column(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            text = "Country",
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                        OutlinedTextField(
-                            value = "",
-                            onValueChange = {},
-                            placeholder = { Text("Country") },
-                            modifier = Modifier.fillMaxWidth(),
-                            singleLine = true
-                        )
-                    }
-                }
-                Spacer(Modifier.height(16.dp))
-                Button(
-                    onClick = {},
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp)
+
+                ExposedDropdownMenu(
+                    expanded = yearExpanded,
+                    onDismissRequest = { yearExpanded = false }
                 ) {
-                    Text("Update Profile")
+                    years.forEach {
+                        DropdownMenuItem(
+                            text = { Text(it.toString()) },
+                            onClick = {
+                                gradYear = it.toString()
+                                yearExpanded = false
+                            }
+                        )
+                    }
                 }
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedTextField(
+                    value = jobTitle,
+                    onValueChange = { jobTitle = it },
+                    label = { Text("Current job") },
+                    modifier = Modifier.weight(1f),
+                    singleLine = true,
+                )
+                OutlinedTextField(
+                    value = company,
+                    onValueChange = { company = it },
+                    label = { Text("Current company") },
+                    modifier = Modifier.weight(1f),
+                    singleLine = true,
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Country dropdown
+                ExposedDropdownMenuBox(
+                    expanded = countryExpanded,
+                    onExpandedChange = { countryExpanded = !countryExpanded },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    OutlinedTextField(
+                        value = country,
+                        onValueChange = { country = it },
+                        readOnly = true,
+                        label = { Text("Country") },
+                        trailingIcon = {
+                            Icon(Icons.Filled.ArrowDropDown, contentDescription = "Expand")
+                        },
+                        modifier = Modifier
+                            .menuAnchor()
+                            .weight(1f),
+                    )
+                    ExposedDropdownMenu(
+                        expanded = countryExpanded,
+                        onDismissRequest = { countryExpanded = false }
+                    ) {
+                        countries.forEach { c ->
+                            DropdownMenuItem(
+                                text = { Text(c) },
+                                onClick = {
+                                    country = c
+                                    countryExpanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+
+                OutlinedTextField(
+                    value = city,
+                    onValueChange = { city = it },
+                    label = { Text("Current city") },
+                    singleLine = true,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedTextField(
+                    value = techStack,
+                    onValueChange = { techStack = it },
+                    label = { Text("Primary tech stack") },
+                    placeholder = { Text("e.g., Android, Backend Go, Data") },
+                    singleLine = true,
+                    modifier = Modifier.weight(1f),
+                )
+
+                OutlinedTextField(
+                    value = contactPref,
+                    onValueChange = { contactPref = it },
+                    label = { Text("Contact preference") },
+                    placeholder = { Text("e.g, email, phone, LinkedIn") },
+                    singleLine = true,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+
+            OutlinedTextField(
+                value = shortBio,
+                onValueChange = {
+                    if (it.length <= 100) { shortBio = it }
+                },
+                label = { Text("Short Bio") },
+                maxLines = 3,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Button(
+                onClick = {
+                    viewModel.updateUser(
+                        fullName = fullName,
+                        department = department,
+                        gradYear = gradYear.toInt(),
+                        jobTitle = jobTitle,
+                        company = company,
+                        techStack = techStack,
+                        country = country,
+                        city = city,
+                        contactPref = contactPref,
+                        shortBio = shortBio
+                    )
+                },
+                modifier = Modifier.padding(12.dp).fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text("Update Profile")
             }
         }
     }

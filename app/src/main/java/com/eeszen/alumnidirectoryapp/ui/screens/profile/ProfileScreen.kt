@@ -2,11 +2,11 @@ package com.eeszen.alumnidirectoryapp.ui.screens.profile
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -17,8 +17,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.LocationOn
@@ -31,23 +33,31 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.eeszen.alumnidirectoryapp.R
+import com.eeszen.alumnidirectoryapp.data.model.User
+import com.eeszen.alumnidirectoryapp.ui.navigation.Screen
 import com.eeszen.alumnidirectoryapp.ui.screens.profile.components.SkillsTagItem
 
 @Composable
 fun ProfileScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: ProfileViewModel = hiltViewModel()
 ) {
+    val user = viewModel.user.collectAsStateWithLifecycle().value
+    val loggedInUser = viewModel.getAuthUser()
     // Background color
     Box(
         modifier = Modifier
@@ -68,16 +78,18 @@ fun ProfileScreen(
                     modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.TopCenter
                 ) {
-                    // Edit button
-                    IconButton(
-                        onClick = {},
-                        modifier = Modifier.align(Alignment.TopEnd)
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(28.dp),
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = "", tint = Color.Black
-                        )
+                    if(user.id == loggedInUser?.uid) {
+                        // Edit button
+                        IconButton(
+                            onClick = { navController.navigate(Screen.EditProfile) },
+                            modifier = Modifier.align(Alignment.TopEnd)
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(28.dp),
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = "", tint = Color.Black
+                            )
+                        }
                     }
                     // Profile avatar
                     Icon(
@@ -101,65 +113,60 @@ fun ProfileScreen(
                     ) {
                         Column(
                             modifier = Modifier
-                                .padding(top = 50.dp, bottom = 16.dp)
+                                .padding(top = 48.dp, bottom = 16.dp)
                                 .fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
+                            // Full Name
                             Text(
-                                "John Doe",
+                                user.fullName,
                                 style = MaterialTheme.typography.headlineLarge
                             )
-                            Text(
-                                "UI/UX Designer",
-                                style = MaterialTheme.typography.titleMedium
-                            )
+                            // Graduation Year
+                            Box(
+                                modifier = Modifier
+                                    .border(
+                                        1.dp,
+                                        color = MaterialTheme.colorScheme.outline,
+                                        shape = CutCornerShape(8.dp)
+                                    )
+                                    .background(
+                                        color = MaterialTheme.colorScheme.surfaceVariant,
+                                        shape = CutCornerShape(8.dp)
+                                    )
+                            ) {
+                                Text(
+                                    "Class of ${user.graduationYear}",
+                                    color = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.padding(
+                                        start = 6.dp,
+                                        end = 6.dp,
+                                        top = 4.dp,
+                                        bottom = 4.dp),
+                                    textAlign = TextAlign.Center,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
                             Spacer(Modifier.height(4.dp))
                             ContactLinks()
-                            Spacer(Modifier.height(12.dp))
-                            ProfileMetaRow()
+                            ShortBio(user)
                         }
                     }
                 }
-                // About me section
-                ShortBio()
                 Spacer(Modifier.height(16.dp))
                 HorizontalDivider(
                     thickness = 1.dp,
                     color = Color.Gray
                 )
                 Spacer(Modifier.height(16.dp))
-                BasicInfo()
+                BasicInfo(user)
                 Spacer(Modifier.height(16.dp))
-                ProfessionalInfo()
+                ProfessionalInfo(user)
                 Spacer(Modifier.height(16.dp))
-                HorizontalDivider(
-                    thickness = 1.dp,
-                    color = Color.Gray
-                )
-                Spacer(Modifier.height(16.dp))
-                FlowRow(
-                    modifier = Modifier.fillMaxWidth().padding(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    maxItemsInEachRow = 3
-                ) {
-                    SkillsTagItem(
-                        tag = "UI/UX"
-                    )
-                    SkillsTagItem(
-                        tag = "Android"
-                    )
-                    SkillsTagItem(
-                        tag = "Product"
-                    )
-                    SkillsTagItem(
-                        tag = "Data"
-                    )
-                    SkillsTagItem(
-                        tag = "Backend Go"
-                    )
-                }
+                TechStack(user)
             }
         }
     }
@@ -204,51 +211,70 @@ fun ContactLinks() {
         }
     }
 }
-
 @Composable
-fun ProfileMetaRow() {
-    Row(
-        modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max),
-        verticalAlignment = Alignment.CenterVertically
+fun ShortBio(user: User) {
+    Box(
+        modifier = Modifier.fillMaxWidth().padding(16.dp),
+        contentAlignment = Alignment.Center
     ) {
-        ProfileMetaItem(
-            icon = Icons.Default.LocationOn,
-            text = "Penang, MY",
-            modifier = Modifier.weight(1f)
-        )
-        VerticalDivider(
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = user.shortBio,
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 3,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+@Composable
+fun BasicInfo(user: User) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondaryContainer),
+        border = BorderStroke(1.dp, color = Color.Black)
+    ) {
+        Column(
             modifier = Modifier
-                .fillMaxHeight(),
-            thickness = 2.dp,
-            color = Color.DarkGray
-        )
-        ProfileMetaItem(
-            icon = Icons.Default.MailOutline,
-            text = "Email",
-            modifier = Modifier.weight(1f)
-        )
-        VerticalDivider(
-            modifier = Modifier
-                .fillMaxHeight(),
-            thickness = 2.dp,
-            color = Color.DarkGray
-        )
-        ProfileMetaItem(
-            icon = Icons.Default.Phone,
-            text = "••• •••",
-            modifier = Modifier.weight(1f)
-        )
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = "Basic info",
+                style = MaterialTheme.typography.titleLarge
+            )
+            Spacer(Modifier.height(2.dp))
+            ProfileMetaItem(
+                icon = Icons.Default.LocationOn,
+                text = "${user.currentCity}, ${user.currentCountry}"
+            )
+            ProfileMetaItem(
+                    icon = Icons.Default.MailOutline,
+            text = user.email,
+            )
+            ProfileMetaItem(
+                icon = Icons.Default.Phone,
+                text = "••• •••",
+            )
+            ProfileMetaItem(
+                icon = Icons.Default.Book,
+                text = user.department,
+            )
+        }
     }
 }
 @Composable
 fun ProfileMetaItem(
     icon: ImageVector,
-    text: String,
-    modifier: Modifier = Modifier
+    text: String
 ) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Row (
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Icon(
             modifier = Modifier
@@ -265,58 +291,7 @@ fun ProfileMetaItem(
 }
 
 @Composable
-fun ShortBio() {
-    Box(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(top = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                text = "About me (Short bio)",
-                style = MaterialTheme.typography.titleLarge
-            )
-            Text(
-                text = "Hi! My name is ...",
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-    }
-}
-
-@Composable
-fun BasicInfo() {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth(),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondaryContainer),
-        border = BorderStroke(1.dp, color = Color.Black)
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                text = "Basic info",
-                style = MaterialTheme.typography.titleLarge
-            )
-            Text(
-                text = "Batch of 2026",
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = "Software Engineering",
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-    }
-}
-
-@Composable
-fun ProfessionalInfo() {
+fun ProfessionalInfo(user: User) {
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -332,14 +307,56 @@ fun ProfessionalInfo() {
                 text = "Professional info",
                 style = MaterialTheme.typography.titleLarge
             )
+            Spacer(Modifier.height(2.dp))
             Text(
-                text = "Current company",
+                "Current position: ${user.currentJob}",
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
-                text = "Primary tech stack",
+                text = "Current company: ${user.currentCompany}",
                 style = MaterialTheme.typography.titleMedium
             )
+        }
+    }
+}
+@Composable
+fun TechStack(user: User) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondaryContainer),
+        border = BorderStroke(1.dp, color = Color.Black)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = "Tech Stack",
+                style = MaterialTheme.typography.titleLarge
+            )
+            Spacer(Modifier.height(2.dp))
+            Text(
+                text = "Primary tech stack: ${user.primaryTechStack}",
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = "Skills: ",
+                style = MaterialTheme.typography.titleMedium
+            )
+            FlowRow(
+                modifier = Modifier.fillMaxWidth().padding(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                maxItemsInEachRow = 3
+            ) {
+                user.skills.forEach { skill ->
+                    SkillsTagItem(
+                        tag = skill
+                    )
+                }
+            }
         }
     }
 }

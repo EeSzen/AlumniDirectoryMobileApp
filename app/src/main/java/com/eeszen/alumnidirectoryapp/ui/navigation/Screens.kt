@@ -12,4 +12,8 @@ sealed class Screen{
     @Serializable data class Profile(val id: String):Screen()
     @Serializable object EditProfile:Screen()
     @Serializable object AdminDashboard:Screen()
+    @Serializable object PendingRegistrations:Screen()
+    @Serializable object ApprovedAlumni:Screen()
+    @Serializable object RejectedAlumni:Screen()
+    @Serializable object ManageUsers:Screen()
 }

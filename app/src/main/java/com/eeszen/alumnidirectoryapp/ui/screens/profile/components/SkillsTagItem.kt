@@ -20,7 +20,7 @@ fun SkillsTagItem(
             width = 1.dp,
             color = MaterialTheme.colorScheme.primary,
             shape = RoundedCornerShape(16.dp)
-        ).padding(16.dp)
+        ).padding(8.dp)
     ) {
         Text(
             text = tag,

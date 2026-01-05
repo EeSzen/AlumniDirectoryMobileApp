@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.eeszen.alumnidirectoryapp.ui.components.header.Header
 import com.eeszen.alumnidirectoryapp.ui.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,8 +85,6 @@ fun RegisterFormScreen(
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
-        Header(title = "Registration")
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -123,7 +120,7 @@ fun RegisterFormScreen(
             ) {
                 OutlinedTextField(
                     value = gradYear,
-                    onValueChange = {},
+                    onValueChange = { gradYear = it },
                     readOnly = true,
                     label = { Text("Batch (year)") },
                     trailingIcon = {
@@ -185,7 +182,7 @@ fun RegisterFormScreen(
                 ) {
                     OutlinedTextField(
                         value = country,
-                        onValueChange = {},
+                        onValueChange = { country = it },
                         readOnly = true,
                         label = { Text("Country") },
                         trailingIcon = {
