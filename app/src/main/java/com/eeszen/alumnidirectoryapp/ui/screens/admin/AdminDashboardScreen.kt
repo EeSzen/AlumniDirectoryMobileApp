@@ -1,6 +1,7 @@
 package com.eeszen.alumnidirectoryapp.ui.screens.admin
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -58,6 +59,10 @@ fun AdminDashboardScreen(
         Box(
             modifier = Modifier.fillMaxWidth().padding(16.dp)
                 .background(MaterialTheme.colorScheme.surface,
+                    RoundedCornerShape(8.dp))
+                .border(
+                    2.dp,
+                    color = MaterialTheme.colorScheme.primary,
                     RoundedCornerShape(8.dp))
         ) {
             Column (
@@ -228,6 +233,10 @@ fun AdminDashboardScreen(
             modifier = Modifier.fillMaxWidth().padding(16.dp)
                 .background(MaterialTheme.colorScheme.surface,
                     RoundedCornerShape(8.dp))
+                .border(
+                    2.dp,
+                    color = MaterialTheme.colorScheme.primary,
+                    RoundedCornerShape(8.dp))
         ) {
             Column (
                 modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -242,7 +251,8 @@ fun AdminDashboardScreen(
                     elevation = CardDefaults.cardElevation(4.dp),
                     shape = RoundedCornerShape(8.dp),
                     colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primaryContainer),
-                    modifier = Modifier.fillMaxWidth().clickable { }
+                    modifier = Modifier.fillMaxWidth()
+                        .clickable { navController.navigate(Screen.ManageUsers) }
                 ) {
                     Row(
                         modifier = Modifier.padding(12.dp),

@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.eeszen.alumnidirectoryapp.ui.screens.admin.AdminDashboardScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.admin.approved.ApprovedAlumniScreen
+import com.eeszen.alumnidirectoryapp.ui.screens.admin.manageUsers.ManageUsersScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.admin.pending.PendingRegistrationsScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.admin.rejected.RejectedAlumniScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.home.HomeScreen
@@ -22,7 +23,7 @@ fun AppNav(
     onTitleChange: (String) -> Unit
 ) {
     NavHost(
-        startDestination = Screen.Login,
+        startDestination = Screen.AdminDashboard,
         navController = navController
     ) {
         composable<Screen.Home> {
@@ -67,6 +68,10 @@ fun AppNav(
         composable<Screen.RejectedAlumni> {
             onTitleChange("Rejected Alumni")
             RejectedAlumniScreen(navController)
+        }
+        composable<Screen.ManageUsers> {
+            onTitleChange("Manage Users")
+            ManageUsersScreen(navController)
         }
     }
 }
