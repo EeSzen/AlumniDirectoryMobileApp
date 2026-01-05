@@ -39,7 +39,8 @@ class RegisterViewModel @Inject constructor(
 
             if(userExist == null) {
                 val newUser = User(
-                    id = uid
+                    id = uid,
+                    email = email
                 )
                 repo.addAlumni(newUser)
             }

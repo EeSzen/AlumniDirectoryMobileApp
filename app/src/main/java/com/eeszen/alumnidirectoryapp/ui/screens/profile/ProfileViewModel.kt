@@ -46,5 +46,8 @@ class ProfileViewModel @Inject constructor(
             _signOutSuccess.emit(Unit)
         }
     }
+    fun refresh() {
+        getAlumniById(userId)
+    }
     fun getAuthUser() = authService.getCurrentUser()
 }

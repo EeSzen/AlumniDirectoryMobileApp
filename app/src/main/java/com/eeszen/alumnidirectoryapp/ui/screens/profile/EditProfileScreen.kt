@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,6 +59,9 @@ fun EditProfileScreen(
     var contactPref by remember { mutableStateOf("") }
     var shortBio by remember { mutableStateOf("") }
 
+    var gradYear by remember { mutableStateOf("") }
+    var country by remember { mutableStateOf(user.currentCountry) }
+
     LaunchedEffect(user) {
         fullName = user.fullName
         department = user.department
@@ -67,6 +71,9 @@ fun EditProfileScreen(
         city = user.currentCity
         contactPref = user.contactPreference
         shortBio = user.shortBio
+
+        gradYear = user.graduationYear.toString()
+        country = user.currentCountry
     }
 
     LaunchedEffect(Unit) {
@@ -75,13 +82,14 @@ fun EditProfileScreen(
         }
     }
 
-    val startYear = 1800
-    val endYear = 2025
+    val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+    val startYear = currentYear - 100
+    val endYear = currentYear
 
     // Country dropdown
     val countries = listOf("United States", "Canada", "United Kingdom", "India", "Germany", "Australia", "Singapore", "Japan")
     var countryExpanded by remember { mutableStateOf(false) }
-    var country by remember { mutableStateOf(user.currentCountry) }
+
 
     Box(
         modifier = Modifier
@@ -154,7 +162,7 @@ fun EditProfileScreen(
                 years.add(i)
             }
             var yearExpanded by remember { mutableStateOf(false) }
-            var gradYear by remember { mutableStateOf("") }
+
 
             ExposedDropdownMenuBox(
                 expanded = yearExpanded,
