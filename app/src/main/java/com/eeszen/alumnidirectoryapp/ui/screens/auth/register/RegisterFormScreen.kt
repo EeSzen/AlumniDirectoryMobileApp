@@ -120,7 +120,7 @@ fun RegisterFormScreen(
             ) {
                 OutlinedTextField(
                     value = gradYear,
-                    onValueChange = {},
+                    onValueChange = { gradYear = it },
                     readOnly = true,
                     label = { Text("Batch (year)") },
                     trailingIcon = {
@@ -182,7 +182,7 @@ fun RegisterFormScreen(
                 ) {
                     OutlinedTextField(
                         value = country,
-                        onValueChange = {},
+                        onValueChange = { country = it },
                         readOnly = true,
                         label = { Text("Country") },
                         trailingIcon = {
