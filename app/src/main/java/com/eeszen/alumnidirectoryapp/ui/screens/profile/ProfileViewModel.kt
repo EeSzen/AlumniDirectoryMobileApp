@@ -9,7 +9,9 @@ import com.eeszen.alumnidirectoryapp.service.AuthService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -21,6 +23,9 @@ class ProfileViewModel @Inject constructor(
 ): ViewModel() {
     private val _user = MutableStateFlow(User())
     val user = _user.asStateFlow()
+
+    private val _signOutSuccess = MutableSharedFlow<Unit>()
+    val signOutSuccess = _signOutSuccess.asSharedFlow()
 
     private val userId = savedStateHandle.get<String>("id")!!
 
@@ -35,6 +40,11 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
-
+    fun signOut() {
+        authService.signOut()
+        viewModelScope.launch {
+            _signOutSuccess.emit(Unit)
+        }
+    }
     fun getAuthUser() = authService.getCurrentUser()
 }
