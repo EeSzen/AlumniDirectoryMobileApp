@@ -23,15 +23,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.CancelPresentation
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.TagFaces
 import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,8 +53,9 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()
 ){
-    val alumni = viewModel.alumni.collectAsStateWithLifecycle().value
     val userStatus = viewModel.userStatus.collectAsStateWithLifecycle().value
+    val alumni by viewModel.filteredAlumni.collectAsStateWithLifecycle()
+    val searchName by viewModel.searchName.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.getAllAlumni()
@@ -69,101 +73,122 @@ fun HomeScreen(
                 Status.REJECTED -> RejectedStatusView()
                 Status.INACTIVE -> InactiveStatusView()
                 Status.APPROVED -> {
-                    LazyColumn (
-                        contentPadding = PaddingValues(8.dp),
+                    Column(
                         modifier = Modifier.fillMaxSize()
                     ) {
-                        items(alumni) { user ->
-                            Card(
-                                elevation = CardDefaults.cardElevation(4.dp),
-                                shape = RoundedCornerShape(12.dp),
-                                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primaryContainer),
-                                modifier = Modifier.fillMaxWidth().padding(8.dp)
-                                    .clickable {
-                                        navController.navigate(Screen.Profile(user.id))
-                                    }
-                            ) {
-                                Column(
-                                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                                    horizontalAlignment = Alignment.Start,
-                                    verticalArrangement = Arrangement.spacedBy(2.dp)
-                                ) {
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        // Profile avatar
-                                        Icon(
-                                            modifier = Modifier
-                                                .size(64.dp)
-                                                .background(color = Color.White, shape = CircleShape),
-                                            imageVector = Icons.Default.AccountCircle,
-                                            contentDescription = "",
-                                            tint = Color.Black,
-                                        )
-                                        Box(
-                                            modifier = Modifier
-                                                .border(
-                                                    1.dp,
-                                                    color = MaterialTheme.colorScheme.outline,
-                                                    shape = CutCornerShape(8.dp)
-                                                )
-                                                .background(
-                                                    color = MaterialTheme.colorScheme.surfaceVariant,
-                                                    shape = CutCornerShape(8.dp)
-                                                )
-                                        ) {
-                                            Text(
-                                                "Class of ${user.graduationYear}",
-                                                color = MaterialTheme.colorScheme.primary,
-                                                modifier = Modifier.padding(
-                                                    start = 6.dp,
-                                                    end = 6.dp,
-                                                    top = 4.dp,
-                                                    bottom = 4.dp),
-                                                textAlign = TextAlign.Center,
-                                                style = MaterialTheme.typography.titleMedium,
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis
-                                            )
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(16.dp)
+                        ) {
+                            OutlinedTextField(
+                                value = searchName,
+                                onValueChange = {viewModel.onSearchName(it)},
+                                modifier = Modifier.fillMaxWidth(),
+                                placeholder = { Text("Search Name") },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Search,
+                                        ""
+                                    )
+                                },
+                                singleLine = true
+                            )
+                        }
+                        LazyColumn (
+                            contentPadding = PaddingValues(8.dp),
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            items(alumni) { user ->
+                                Card(
+                                    elevation = CardDefaults.cardElevation(4.dp),
+                                    shape = RoundedCornerShape(12.dp),
+                                    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primaryContainer),
+                                    modifier = Modifier.fillMaxWidth().padding(8.dp)
+                                        .clickable {
+                                            navController.navigate(Screen.Profile(user.id))
                                         }
-                                    }
-                                    Spacer(Modifier.height(2.dp))
-                                    Text(
-                                        user.fullName,
-                                        textAlign = TextAlign.Start,
-                                        style = MaterialTheme.typography.titleLarge,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Text(
-                                        "${user.currentJob} at ${user.currentCompany}",
-                                        textAlign = TextAlign.Start,
-                                        style = MaterialTheme.typography.titleSmall,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                    Text(
-                                        "Primary Stack: ${user.primaryTechStack}",
-                                        textAlign = TextAlign.Start,
-                                        style = MaterialTheme.typography.titleSmall,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.spacedBy(2.dp),
-                                        verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Column(
+                                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                                        horizontalAlignment = Alignment.Start,
+                                        verticalArrangement = Arrangement.spacedBy(2.dp)
                                     ) {
-                                        Icon(
-                                            imageVector = Icons.Default.LocationOn,
-                                            ""
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        ) {
+                                            // Profile avatar
+                                            Icon(
+                                                modifier = Modifier
+                                                    .size(64.dp)
+                                                    .background(color = Color.White, shape = CircleShape),
+                                                imageVector = Icons.Default.AccountCircle,
+                                                contentDescription = "",
+                                                tint = Color.Black,
+                                            )
+                                            Box(
+                                                modifier = Modifier
+                                                    .border(
+                                                        1.dp,
+                                                        color = MaterialTheme.colorScheme.outline,
+                                                        shape = CutCornerShape(8.dp)
+                                                    )
+                                                    .background(
+                                                        color = MaterialTheme.colorScheme.surfaceVariant,
+                                                        shape = CutCornerShape(8.dp)
+                                                    )
+                                            ) {
+                                                Text(
+                                                    "Class of ${user.graduationYear}",
+                                                    color = MaterialTheme.colorScheme.primary,
+                                                    modifier = Modifier.padding(
+                                                        start = 6.dp,
+                                                        end = 6.dp,
+                                                        top = 4.dp,
+                                                        bottom = 4.dp),
+                                                    textAlign = TextAlign.Center,
+                                                    style = MaterialTheme.typography.titleMedium,
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Ellipsis
+                                                )
+                                            }
+                                        }
+                                        Spacer(Modifier.height(2.dp))
+                                        Text(
+                                            user.fullName,
+                                            textAlign = TextAlign.Start,
+                                            style = MaterialTheme.typography.titleLarge,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                            fontWeight = FontWeight.Bold
                                         )
                                         Text(
-                                            "${user.currentCity}, ${user.currentCountry}",
-                                            style = MaterialTheme.typography.titleSmall
+                                            "${user.currentJob} at ${user.currentCompany}",
+                                            textAlign = TextAlign.Start,
+                                            style = MaterialTheme.typography.titleSmall,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
                                         )
+                                        Text(
+                                            "Primary Stack: ${user.primaryTechStack}",
+                                            textAlign = TextAlign.Start,
+                                            style = MaterialTheme.typography.titleSmall,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.LocationOn,
+                                                ""
+                                            )
+                                            Text(
+                                                "${user.currentCity}, ${user.currentCountry}",
+                                                style = MaterialTheme.typography.titleSmall
+                                            )
+                                        }
                                     }
                                 }
                             }
