@@ -2,6 +2,7 @@ package com.eeszen.alumnidirectoryapp.core.di
 
 import com.eeszen.alumnidirectoryapp.data.repo.AlumniRepo
 import com.eeszen.alumnidirectoryapp.data.repo.AlumniRepoFireImpl
+import com.eeszen.alumnidirectoryapp.data.repo.UserRepo
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -21,5 +22,10 @@ class AppModule {
     @Singleton
     fun provideRepo(): AlumniRepo {
         return AlumniRepoFireImpl()
+    }
+    @Provides
+    @Singleton
+    fun provideUserRepo(): UserRepo {
+        return UserRepo()
     }
 }

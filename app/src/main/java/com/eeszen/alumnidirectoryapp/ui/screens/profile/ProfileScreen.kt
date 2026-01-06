@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Phone
@@ -67,6 +68,15 @@ fun ProfileScreen(
     }
 
     val loggedInUser = viewModel.getAuthUser()
+
+    LaunchedEffect(Unit) {
+        viewModel.signOutSuccess.collect {
+            navController.navigate(Screen.Login) {
+                popUpTo(0) // clears back stack
+            }
+        }
+    }
+
     // Background color
     Box(
         modifier = Modifier
@@ -101,16 +111,32 @@ fun ProfileScreen(
                     }
 
                     if(user.id == loggedInUser?.uid) {
-                        // Edit button
-                        IconButton(
-                            onClick = { navController.navigate(Screen.EditProfile) },
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
                             modifier = Modifier.align(Alignment.TopEnd)
                         ) {
-                            Icon(
-                                modifier = Modifier.size(28.dp),
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = "", tint = Color.Black
-                            )
+                            // Edit button
+                            IconButton(
+                                onClick = { navController.navigate(Screen.EditProfile) },
+//                                modifier = Modifier.align(Alignment.TopEnd)
+                            ) {
+                                Icon(
+                                    modifier = Modifier.size(28.dp),
+                                    imageVector = Icons.Default.Edit,
+                                    contentDescription = "", tint = Color.Black
+                                )
+                            }
+                            // Edit button
+                            IconButton(
+                                onClick = { viewModel.signOut() },
+//                                modifier = Modifier.align(Alignment.TopEnd)
+                            ) {
+                                Icon(
+                                    modifier = Modifier.size(28.dp),
+                                    imageVector = Icons.Default.ExitToApp,
+                                    contentDescription = "", tint = Color.Black
+                                )
+                            }
                         }
                     }
                     // Profile avatar

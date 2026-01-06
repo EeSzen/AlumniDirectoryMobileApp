@@ -21,7 +21,10 @@ import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.CancelPresentation
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.TagFaces
+import androidx.compose.material.icons.filled.WarningAmber
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -39,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.eeszen.alumnidirectoryapp.data.model.Status
 import com.eeszen.alumnidirectoryapp.ui.navigation.Screen
 
 @Composable
@@ -47,6 +51,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ){
     val alumni = viewModel.alumni.collectAsStateWithLifecycle().value
+    val userStatus = viewModel.userStatus.collectAsStateWithLifecycle().value
+
     LaunchedEffect(Unit) {
         viewModel.getAllAlumni()
     }
@@ -58,106 +64,176 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ){
-            LazyColumn (
-                contentPadding = PaddingValues(8.dp),
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(alumni) { user ->
-                    Card(
-                        elevation = CardDefaults.cardElevation(4.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primaryContainer),
-                        modifier = Modifier.fillMaxWidth().padding(8.dp)
-                            .clickable {
-                                navController.navigate(Screen.Profile(user.id))
-                            }
+            when(userStatus) {
+                Status.PENDING -> PendingStatusView()
+                Status.REJECTED -> RejectedStatusView()
+                Status.INACTIVE -> InactiveStatusView()
+                Status.APPROVED -> {
+                    LazyColumn (
+                        contentPadding = PaddingValues(8.dp),
+                        modifier = Modifier.fillMaxSize()
                     ) {
-                        Column(
-                            modifier = Modifier.fillMaxWidth().padding(16.dp),
-                            horizontalAlignment = Alignment.Start,
-                            verticalArrangement = Arrangement.spacedBy(2.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                        items(alumni) { user ->
+                            Card(
+                                elevation = CardDefaults.cardElevation(4.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primaryContainer),
+                                modifier = Modifier.fillMaxWidth().padding(8.dp)
+                                    .clickable {
+                                        navController.navigate(Screen.Profile(user.id))
+                                    }
                             ) {
-                                // Profile avatar
-                                Icon(
-                                    modifier = Modifier
-                                        .size(64.dp)
-                                        .background(color = Color.White, shape = CircleShape),
-                                    imageVector = Icons.Default.AccountCircle,
-                                    contentDescription = "",
-                                    tint = Color.Black,
-                                )
-                                Box(
-                                    modifier = Modifier
-                                        .border(
-                                        1.dp,
-                                        color = MaterialTheme.colorScheme.outline,
-                                        shape = CutCornerShape(8.dp)
-                                        )
-                                        .background(
-                                            color = MaterialTheme.colorScheme.surfaceVariant,
-                                            shape = CutCornerShape(8.dp)
-                                        )
+                                Column(
+                                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                                    horizontalAlignment = Alignment.Start,
+                                    verticalArrangement = Arrangement.spacedBy(2.dp)
                                 ) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        // Profile avatar
+                                        Icon(
+                                            modifier = Modifier
+                                                .size(64.dp)
+                                                .background(color = Color.White, shape = CircleShape),
+                                            imageVector = Icons.Default.AccountCircle,
+                                            contentDescription = "",
+                                            tint = Color.Black,
+                                        )
+                                        Box(
+                                            modifier = Modifier
+                                                .border(
+                                                    1.dp,
+                                                    color = MaterialTheme.colorScheme.outline,
+                                                    shape = CutCornerShape(8.dp)
+                                                )
+                                                .background(
+                                                    color = MaterialTheme.colorScheme.surfaceVariant,
+                                                    shape = CutCornerShape(8.dp)
+                                                )
+                                        ) {
+                                            Text(
+                                                "Class of ${user.graduationYear}",
+                                                color = MaterialTheme.colorScheme.primary,
+                                                modifier = Modifier.padding(
+                                                    start = 6.dp,
+                                                    end = 6.dp,
+                                                    top = 4.dp,
+                                                    bottom = 4.dp),
+                                                textAlign = TextAlign.Center,
+                                                style = MaterialTheme.typography.titleMedium,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis
+                                            )
+                                        }
+                                    }
+                                    Spacer(Modifier.height(2.dp))
                                     Text(
-                                        "Class of ${user.graduationYear}",
-                                        color = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier.padding(
-                                            start = 6.dp,
-                                            end = 6.dp,
-                                            top = 4.dp,
-                                            bottom = 4.dp),
-                                        textAlign = TextAlign.Center,
-                                        style = MaterialTheme.typography.titleMedium,
+                                        user.fullName,
+                                        textAlign = TextAlign.Start,
+                                        style = MaterialTheme.typography.titleLarge,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        "${user.currentJob} at ${user.currentCompany}",
+                                        textAlign = TextAlign.Start,
+                                        style = MaterialTheme.typography.titleSmall,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
+                                    Text(
+                                        "Primary Stack: ${user.primaryTechStack}",
+                                        textAlign = TextAlign.Start,
+                                        style = MaterialTheme.typography.titleSmall,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.LocationOn,
+                                            ""
+                                        )
+                                        Text(
+                                            "${user.currentCity}, ${user.currentCountry}",
+                                            style = MaterialTheme.typography.titleSmall
+                                        )
+                                    }
                                 }
-                            }
-                            Spacer(Modifier.height(2.dp))
-                            Text(
-                                user.fullName,
-                                textAlign = TextAlign.Start,
-                                style = MaterialTheme.typography.titleLarge,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                "${user.currentJob} at ${user.currentCompany}",
-                                textAlign = TextAlign.Start,
-                                style = MaterialTheme.typography.titleSmall,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            Text(
-                                "Primary Stack: ${user.primaryTechStack}",
-                                textAlign = TextAlign.Start,
-                                style = MaterialTheme.typography.titleSmall,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(2.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.LocationOn,
-                                    ""
-                                )
-                                Text(
-                                    "${user.currentCity}, ${user.currentCountry}",
-                                    style = MaterialTheme.typography.titleSmall
-                                )
                             }
                         }
                     }
                 }
             }
         }
+    }
+}
+@Composable
+fun PendingStatusView() {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
+    ) {
+        Icon(
+            imageVector = Icons.Default.TagFaces,
+            "",
+            modifier = Modifier
+                .size(100.dp)
+        )
+        Text(
+            "Thanks for signing up!"
+        )
+        Text(
+            "We’re reviewing your account."
+        )
+    }
+}
+@Composable
+fun RejectedStatusView() {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
+    ) {
+        Icon(
+            imageVector = Icons.Default.CancelPresentation,
+            "",
+            modifier = Modifier
+                .size(100.dp)
+        )
+        Text(
+            "Sorry! Sign Up rejected"
+        )
+        Text(
+            "Contact admin for further action"
+        )
+    }
+}
+@Composable
+fun InactiveStatusView() {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
+    ) {
+        Icon(
+            imageVector = Icons.Default.WarningAmber,
+            "",
+            modifier = Modifier
+                .size(100.dp)
+        )
+        Text(
+            "Your account is inactive!"
+        )
+        Text(
+            "Contact admin for further action"
+        )
     }
 }
