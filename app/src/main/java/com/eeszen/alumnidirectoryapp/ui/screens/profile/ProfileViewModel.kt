@@ -21,16 +21,21 @@ class ProfileViewModel @Inject constructor(
     private val authService: AuthService,
     private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
-    private val _user = MutableStateFlow(User())
+    private val _user = MutableStateFlow<User?>(null)
     val user = _user.asStateFlow()
 
     private val _signOutSuccess = MutableSharedFlow<Unit>()
     val signOutSuccess = _signOutSuccess.asSharedFlow()
 
-    private val userId = savedStateHandle.get<String>("id")!!
+//    private val userId = savedStateHandle.get<String>("id")!!
+    private val userId: String =
+        savedStateHandle["id"] ?: authService.getCurrentUid() ?: ""
 
     init {
-        getAlumniById(userId)
+//        getAlumniById(userId)
+        if (userId.isNotBlank()) {
+            getAlumniById(userId)
+        }
     }
 
     fun getAlumniById(id: String) {
