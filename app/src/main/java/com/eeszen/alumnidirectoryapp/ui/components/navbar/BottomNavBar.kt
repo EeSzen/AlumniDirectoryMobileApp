@@ -11,10 +11,13 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.eeszen.alumnidirectoryapp.data.model.Role
+import com.eeszen.alumnidirectoryapp.data.model.User
 import com.eeszen.alumnidirectoryapp.data.repo.AlumniRepo
 import com.eeszen.alumnidirectoryapp.service.AuthService
 import com.eeszen.alumnidirectoryapp.ui.navigation.Screen
@@ -29,15 +32,24 @@ data class BottomNavItem(
 @Composable
 fun BottomNavigationBar(
     navController: NavHostController,
-    authService: AuthService = AuthService()
+    authService: AuthService = AuthService(),
+    repo: AlumniRepo = AlumniRepo.getInstance()
 ) {
     val uid = authService.getCurrentUid() ?: return
 
-    val bottomNavItems = listOf(
-        BottomNavItem(Screen.Home, Icons.Default.Home, "Home"),
-        BottomNavItem(Screen.AdminDashboard, Icons.Default.Dashboard, "Admin"),
-        BottomNavItem(Screen.Profile(uid), Icons.Default.Person, "Profile")
-    )
+    val user by produceState<User?>(initialValue = null, key1 = uid) {
+        value = repo.getAlumniById(uid)
+    }
+
+    val bottomNavItems = buildList {
+        add(BottomNavItem(Screen.Home, Icons.Default.Home, "Home"))
+
+        if (user?.role == Role.ADMIN) {
+            add(BottomNavItem(Screen.AdminDashboard, Icons.Default.Dashboard, "Admin"))
+        }
+
+        add(BottomNavItem(Screen.Profile(uid), Icons.Default.Person, "Profile"))
+    }
 
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
