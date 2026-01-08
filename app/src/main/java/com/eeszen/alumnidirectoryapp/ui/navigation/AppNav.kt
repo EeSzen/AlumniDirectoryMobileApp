@@ -23,7 +23,7 @@ fun AppNav(
     onTitleChange: (String) -> Unit
 ) {
     NavHost(
-        startDestination = Screen.AdminDashboard,
+        startDestination = Screen.Login,
         navController = navController
     ) {
         composable<Screen.Home> {

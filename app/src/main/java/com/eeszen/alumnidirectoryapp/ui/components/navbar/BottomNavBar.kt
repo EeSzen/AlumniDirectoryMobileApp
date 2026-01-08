@@ -15,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.eeszen.alumnidirectoryapp.data.repo.AlumniRepo
+import com.eeszen.alumnidirectoryapp.service.AuthService
 import com.eeszen.alumnidirectoryapp.ui.navigation.Screen
 
 
@@ -24,17 +26,19 @@ data class BottomNavItem(
     val label: String
 )
 
-val bottomNavItems = listOf(
-    BottomNavItem(Screen.Home, Icons.Default.Home, "Home"),
-    BottomNavItem(Screen.AdminDashboard, Icons.Default.Dashboard, "Admin"),
-    BottomNavItem(Screen.Profile, Icons.Default.Person, "Profile")
-)
-
-
 @Composable
 fun BottomNavigationBar(
-    navController: NavHostController
+    navController: NavHostController,
+    authService: AuthService = AuthService()
 ) {
+    val uid = authService.getCurrentUid() ?: return
+
+    val bottomNavItems = listOf(
+        BottomNavItem(Screen.Home, Icons.Default.Home, "Home"),
+        BottomNavItem(Screen.AdminDashboard, Icons.Default.Dashboard, "Admin"),
+        BottomNavItem(Screen.Profile(uid), Icons.Default.Person, "Profile")
+    )
+
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = backStackEntry?.destination
 
