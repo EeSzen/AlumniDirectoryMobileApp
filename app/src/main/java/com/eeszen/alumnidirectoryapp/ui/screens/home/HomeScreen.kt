@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -28,6 +29,7 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.TagFaces
 import androidx.compose.material.icons.filled.WarningAmber
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
@@ -199,6 +201,35 @@ fun HomeScreen(
                                         modifier = Modifier.fillMaxWidth().padding(16.dp),
                                         horizontalAlignment = Alignment.Start,
                                         verticalArrangement = Arrangement.spacedBy(2.dp)
+                                    Spacer(Modifier.height(2.dp))
+                                    Text(
+                                        user.fullName,
+                                        textAlign = TextAlign.Start,
+                                        style = MaterialTheme.typography.titleLarge,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        "${user.currentJob} at ${user.currentCompany}",
+                                        textAlign = TextAlign.Start,
+                                        style = MaterialTheme.typography.titleSmall,
+                                        color = Color.Gray,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    Text(
+                                        "Primary Stack: ${user.primaryTechStack}",
+                                        textAlign = TextAlign.Start,
+                                        style = MaterialTheme.typography.titleSmall,
+                                        color = Color.Gray,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Row(
                                             modifier = Modifier.fillMaxWidth(),
