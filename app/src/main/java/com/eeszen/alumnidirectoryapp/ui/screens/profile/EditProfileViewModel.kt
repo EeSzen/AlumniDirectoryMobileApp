@@ -1,5 +1,6 @@
 package com.eeszen.alumnidirectoryapp.ui.screens.profile
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,22 +18,24 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     private val authService: AuthService,
-    private val repo: AlumniRepo
+    private val repo: AlumniRepo,
+    private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
     private val _user = MutableStateFlow(User())
     val user = _user.asStateFlow()
     private val _success = MutableSharedFlow<Unit>()
     val success = _success.asSharedFlow()
-
-    fun getUser() {
+    private val userId = savedStateHandle.get<String>("id")!!
+    init {
+        getUser(userId)
+    }
+    fun getUser(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val currentUser = authService.getCurrentUser() ?: return@launch
-            repo.getAlumniById(currentUser.uid)?.let {
+            repo.getAlumniById(id)?.let {
                 _user.value = it
             }
         }
     }
-    fun getAuthUser() = authService.getCurrentUser()
     fun updateUser(
         fullName: String,
         department: String,
@@ -45,8 +48,6 @@ class EditProfileViewModel @Inject constructor(
         contactPref: String,
         shortBio: String
     ) {
-        val currentUser = authService.getCurrentUser() ?: return
-
         val updatedUser = user.value.copy(
             fullName = fullName,
             department = department,
@@ -61,7 +62,7 @@ class EditProfileViewModel @Inject constructor(
         )
         viewModelScope.launch(Dispatchers.IO) {
             repo.updateAlumni(
-                id = currentUser.uid,
+                id = userId,
                 user = updatedUser
             )
             _success.emit(Unit)

@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,8 +61,11 @@ fun BottomSheetDialog(
     var selectedCountries by remember { mutableStateOf(setOf<String>()) }
     var selectedYears by remember { mutableStateOf(setOf<Int>()) }
 
+    val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+    val startYear = currentYear - 20
+    val endYear = currentYear
     val gradYears = mutableListOf<Int>()
-    for (i in 2010..2026) {
+    for (i in startYear..endYear){
         gradYears.add(i)
     }
 

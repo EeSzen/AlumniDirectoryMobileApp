@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eeszen.alumnidirectoryapp.data.model.User
 import com.eeszen.alumnidirectoryapp.data.repo.AlumniRepo
+import com.eeszen.alumnidirectoryapp.data.repo.UserRepo
 import com.eeszen.alumnidirectoryapp.service.AuthService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -19,18 +20,20 @@ import kotlinx.coroutines.launch
 class ProfileViewModel @Inject constructor(
     private val repo: AlumniRepo,
     private val authService: AuthService,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val userRepo: UserRepo
 ): ViewModel() {
     private val _user = MutableStateFlow(User())
     val user = _user.asStateFlow()
-
+    private val _isAdmin = MutableStateFlow(false)
+    val isAdmin = _isAdmin.asStateFlow()
     private val _signOutSuccess = MutableSharedFlow<Unit>()
     val signOutSuccess = _signOutSuccess.asSharedFlow()
-
     private val userId = savedStateHandle.get<String>("id")!!
 
     init {
         getAlumniById(userId)
+        checkIsAdmin()
     }
 
     fun getAlumniById(id: String) {
@@ -50,4 +53,10 @@ class ProfileViewModel @Inject constructor(
         getAlumniById(userId)
     }
     fun getAuthUser() = authService.getCurrentUser()
+    fun checkIsAdmin() {
+        val uid = authService.getCurrentUser()?.uid ?: return
+        viewModelScope.launch(Dispatchers.IO) {
+            _isAdmin.value = userRepo.isAdmin(uid)
+        }
+    }
 }

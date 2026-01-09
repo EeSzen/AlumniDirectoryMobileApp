@@ -60,14 +60,14 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val user = viewModel.user.collectAsStateWithLifecycle().value
+    val isAdmin = viewModel.isAdmin.collectAsStateWithLifecycle().value
+    val loggedInUser = viewModel.getAuthUser()
 
     // Reload the profile screen to the latest data
     val backStackEntry = navController.currentBackStackEntry
     LaunchedEffect(backStackEntry) {
         viewModel.refresh()
     }
-
-    val loggedInUser = viewModel.getAuthUser()
 
     LaunchedEffect(Unit) {
         viewModel.signOutSuccess.collect {
@@ -109,16 +109,14 @@ fun ProfileScreen(
                             modifier = Modifier.size(28.dp)
                         )
                     }
-
-                    if(user.id == loggedInUser?.uid) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            modifier = Modifier.align(Alignment.TopEnd)
-                        ) {
-                            // Edit button
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        modifier = Modifier.align(Alignment.TopEnd)
+                    ) {
+                        // Edit button
+                        if(user.id == loggedInUser?.uid || isAdmin) {
                             IconButton(
-                                onClick = { navController.navigate(Screen.EditProfile) },
-//                                modifier = Modifier.align(Alignment.TopEnd)
+                                onClick = { navController.navigate(Screen.EditProfile(user.id)) }
                             ) {
                                 Icon(
                                     modifier = Modifier.size(28.dp),
@@ -126,10 +124,11 @@ fun ProfileScreen(
                                     contentDescription = "", tint = Color.Black
                                 )
                             }
-                            // Edit button
+                        }
+                        // Sign Out button
+                        if (user.id == loggedInUser?.uid) {
                             IconButton(
-                                onClick = { viewModel.signOut() },
-//                                modifier = Modifier.align(Alignment.TopEnd)
+                                onClick = { viewModel.signOut() }
                             ) {
                                 Icon(
                                     modifier = Modifier.size(28.dp),

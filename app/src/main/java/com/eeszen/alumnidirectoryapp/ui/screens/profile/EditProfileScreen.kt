@@ -47,9 +47,7 @@ fun EditProfileScreen(
     viewModel: EditProfileViewModel = hiltViewModel()
 ) {
     val user = viewModel.user.collectAsStateWithLifecycle().value
-    LaunchedEffect(Unit) {
-        viewModel.getUser()
-    }
+
     var fullName by remember { mutableStateOf("") }
     var department by remember { mutableStateOf("") }
     var jobTitle by remember { mutableStateOf("") }
