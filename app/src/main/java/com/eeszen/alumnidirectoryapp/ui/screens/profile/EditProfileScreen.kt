@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.eeszen.alumnidirectoryapp.data.model.Status
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,6 +48,7 @@ fun EditProfileScreen(
     viewModel: EditProfileViewModel = hiltViewModel()
 ) {
     val user = viewModel.user.collectAsStateWithLifecycle().value
+    val isAdmin = viewModel.isAdmin.collectAsStateWithLifecycle().value
 
     var fullName by remember { mutableStateOf("") }
     var department by remember { mutableStateOf("") }
@@ -59,6 +61,7 @@ fun EditProfileScreen(
 
     var gradYear by remember { mutableStateOf("") }
     var country by remember { mutableStateOf(user.currentCountry) }
+    var currentStatus by remember { mutableStateOf(user.status) }
 
     LaunchedEffect(user) {
         fullName = user.fullName
@@ -72,6 +75,7 @@ fun EditProfileScreen(
 
         gradYear = user.graduationYear.toString()
         country = user.currentCountry
+        currentStatus = user.status
     }
 
     LaunchedEffect(Unit) {
@@ -87,7 +91,9 @@ fun EditProfileScreen(
     // Country dropdown
     val countries = listOf("United States", "Canada", "United Kingdom", "India", "Germany", "Australia", "Singapore", "Japan")
     var countryExpanded by remember { mutableStateOf(false) }
-
+    // Status dropdown
+    val statusOptions = listOf(Status.PENDING, Status.APPROVED, Status.REJECTED, Status.INACTIVE)
+    var statusExpanded by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -296,6 +302,41 @@ fun EditProfileScreen(
                 maxLines = 3,
                 modifier = Modifier.fillMaxWidth()
             )
+            // Change status - only admin
+            if (isAdmin) {
+                ExposedDropdownMenuBox(
+                    expanded = statusExpanded,
+                    onExpandedChange = { statusExpanded = !statusExpanded },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedTextField(
+                        value = currentStatus.name,
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("Current Status") },
+                        trailingIcon = {
+                            Icon(Icons.Filled.ArrowDropDown, contentDescription = "Expand")
+                        },
+                        modifier = Modifier
+                            .menuAnchor()
+                            .fillMaxWidth(),
+                    )
+                    ExposedDropdownMenu(
+                        expanded = statusExpanded,
+                        onDismissRequest = { statusExpanded = false }
+                    ) {
+                        statusOptions.forEach { status ->
+                            DropdownMenuItem(
+                                text = { Text(status.toString()) },
+                                onClick = {
+                                    currentStatus = status
+                                    statusExpanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
             Button(
                 onClick = {
                     viewModel.updateUser(
@@ -308,7 +349,8 @@ fun EditProfileScreen(
                         country = country,
                         city = city,
                         contactPref = contactPref,
-                        shortBio = shortBio
+                        shortBio = shortBio,
+                        status = currentStatus
                     )
                 },
                 modifier = Modifier.padding(12.dp).fillMaxWidth(),
