@@ -202,42 +202,48 @@ fun HomeScreen(
                                     ) {
                                         Row(
                                             modifier = Modifier.fillMaxWidth(),
-                                            horizontalArrangement = Arrangement.SpaceBetween
+                                            horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                            verticalAlignment = Alignment.CenterVertically
                                         ) {
-                                            // Profile avatar
-                                            Icon(
-                                                modifier = Modifier
-                                                    .size(64.dp)
-                                                    .background(color = Color.White, shape = CircleShape),
-                                                imageVector = Icons.Default.AccountCircle,
-                                                contentDescription = "",
-                                                tint = Color.Black,
-                                            )
-                                            Box(
-                                                modifier = Modifier
-                                                    .border(
-                                                        1.dp,
-                                                        color = MaterialTheme.colorScheme.outline,
-                                                        shape = CutCornerShape(8.dp)
-                                                    )
-                                                    .background(
-                                                        color = MaterialTheme.colorScheme.surfaceVariant,
-                                                        shape = CutCornerShape(8.dp)
-                                                    )
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.SpaceBetween
                                             ) {
-                                                Text(
-                                                    "Class of ${user.graduationYear}",
-                                                    color = MaterialTheme.colorScheme.primary,
-                                                    modifier = Modifier.padding(
-                                                        start = 6.dp,
-                                                        end = 6.dp,
-                                                        top = 4.dp,
-                                                        bottom = 4.dp),
-                                                    textAlign = TextAlign.Center,
-                                                    style = MaterialTheme.typography.titleMedium,
-                                                    maxLines = 1,
-                                                    overflow = TextOverflow.Ellipsis
+                                                // Profile avatar
+                                                Icon(
+                                                    modifier = Modifier
+                                                        .size(64.dp)
+                                                        .background(color = Color.White, shape = CircleShape),
+                                                    imageVector = Icons.Default.AccountCircle,
+                                                    contentDescription = "",
+                                                    tint = Color.Black,
                                                 )
+                                                Box(
+                                                    modifier = Modifier
+                                                        .border(
+                                                            1.dp,
+                                                            color = MaterialTheme.colorScheme.outline,
+                                                            shape = CutCornerShape(8.dp)
+                                                        )
+                                                        .background(
+                                                            color = MaterialTheme.colorScheme.surfaceVariant,
+                                                            shape = CutCornerShape(8.dp)
+                                                        )
+                                                ) {
+                                                    Text(
+                                                        "Class of ${user.graduationYear}",
+                                                        color = MaterialTheme.colorScheme.primary,
+                                                        modifier = Modifier.padding(
+                                                            start = 6.dp,
+                                                            end = 6.dp,
+                                                            top = 4.dp,
+                                                            bottom = 4.dp),
+                                                        textAlign = TextAlign.Center,
+                                                        style = MaterialTheme.typography.titleMedium,
+                                                        maxLines = 1,
+                                                        overflow = TextOverflow.Ellipsis
+                                                    )
+                                                }
                                             }
                                         }
                                         Spacer(Modifier.height(2.dp))
