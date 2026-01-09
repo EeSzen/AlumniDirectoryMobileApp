@@ -137,4 +137,21 @@ class AlumniRepoFireImpl:AlumniRepo {
             e.printStackTrace()
         }
     }
+
+    //Metadata
+    override suspend fun getTechStacks(): List<String> {
+        val snap =  db.collection("metadata")
+            .document("techStacks")
+            .get()
+            .await()
+        return snap.get("values") as? List<String> ?: emptyList()
+    }
+
+    override suspend fun getCountries(): List<String> {
+        val snap =  db.collection("metadata")
+            .document("countries")
+            .get()
+            .await()
+        return snap.get("values") as? List<String> ?: emptyList()
+    }
 }
