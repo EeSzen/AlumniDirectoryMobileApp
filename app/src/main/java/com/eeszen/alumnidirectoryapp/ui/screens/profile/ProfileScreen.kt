@@ -50,6 +50,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.eeszen.alumnidirectoryapp.R
+import com.eeszen.alumnidirectoryapp.data.model.Status
 import com.eeszen.alumnidirectoryapp.data.model.User
 import com.eeszen.alumnidirectoryapp.ui.navigation.Screen
 import com.eeszen.alumnidirectoryapp.ui.screens.profile.components.SkillsTagItem
@@ -62,6 +63,17 @@ fun ProfileScreen(
     val user = viewModel.user.collectAsStateWithLifecycle().value
     val isAdmin = viewModel.isAdmin.collectAsStateWithLifecycle().value
     val loggedInUser = viewModel.getAuthUser()
+    if (user == null) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("Loading...")
+        }
+        return
+    }else if (user.status != Status.APPROVED){
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("Waiting for approval...")
+        }
+        return
+    }
 
     // Reload the profile screen to the latest data
     val backStackEntry = navController.currentBackStackEntry
@@ -133,7 +145,7 @@ fun ProfileScreen(
                                 Icon(
                                     modifier = Modifier.size(28.dp),
                                     imageVector = Icons.Default.ExitToApp,
-                                    contentDescription = "", tint = Color.Black
+                                    contentDescription = "", tint = Color.Red
                                 )
                             }
                         }
