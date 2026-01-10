@@ -33,6 +33,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.eeszen.alumnidirectoryapp.R
+import com.eeszen.alumnidirectoryapp.ui.theme.customOutlinedTextFieldColors
 
 @Composable
 fun EmailPassAuth(
@@ -56,13 +57,15 @@ fun EmailPassAuth(
             value = email,
             onValueChange = {email = it},
             placeholder = { Text("Email") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = customOutlinedTextFieldColors()
         )
         OutlinedTextField(
             value = password,
             onValueChange = {password = it},
             placeholder = { Text("Password") },
             modifier = Modifier.fillMaxWidth(),
+            colors = customOutlinedTextFieldColors(),
             visualTransformation =
                 if (showPassword) {
                     VisualTransformation.None
@@ -85,7 +88,9 @@ fun EmailPassAuth(
             onClick = {buttonAction(email,password)},
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(Color(0xFFE74C4C))
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            )
         ) {
             Text(actionButtonText)
         }

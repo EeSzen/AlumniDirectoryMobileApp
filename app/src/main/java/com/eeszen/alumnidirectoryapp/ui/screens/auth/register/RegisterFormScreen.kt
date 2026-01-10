@@ -10,17 +10,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,12 +30,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.eeszen.alumnidirectoryapp.ui.navigation.Screen
+import com.eeszen.alumnidirectoryapp.ui.theme.customOutlinedTextFieldColors
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -85,13 +84,17 @@ fun RegisterFormScreen(
             }
         }
     }
+    LaunchedEffect(Unit) {
+        viewModel.getCountries()
+    }
 
     val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-    val startYear = currentYear - 100
+    val startYear = currentYear - 20
     val endYear = currentYear
 
     // Country dropdown
-    val countries = listOf("United States", "Canada", "United Kingdom", "India", "Germany", "Australia", "Singapore", "Japan")
+    val countries = viewModel.countries.collectAsStateWithLifecycle().value
+//    val countries = listOf("United States", "Canada", "United Kingdom", "India", "Germany", "Australia", "Singapore", "Japan")
     var countryExpanded by remember { mutableStateOf(false) }
     var country by remember { mutableStateOf(user.currentCountry) }
 
@@ -112,7 +115,8 @@ fun RegisterFormScreen(
                 onValueChange = { fullName = it },
                 label = { Text("Full name") },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = customOutlinedTextFieldColors()
             )
 
             Spacer(Modifier.height(12.dp))
@@ -123,7 +127,8 @@ fun RegisterFormScreen(
                 onValueChange = { department = it },
                 label = { Text("Department / Major") },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = customOutlinedTextFieldColors()
             )
 
             // Graduation year
@@ -151,7 +156,8 @@ fun RegisterFormScreen(
                     },
                     modifier = Modifier
                         .menuAnchor()
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
+                    colors = customOutlinedTextFieldColors()
                 )
 
                 ExposedDropdownMenu(
@@ -186,6 +192,7 @@ fun RegisterFormScreen(
                         label = { Text("Current job") },
 //                        modifier = Modifier.weight(1f),
                         singleLine = true,
+                        colors = customOutlinedTextFieldColors()
                     )
                 }
 
@@ -199,6 +206,7 @@ fun RegisterFormScreen(
                         label = { Text("Current company") },
 //                        modifier = Modifier.weight(1f),
                         singleLine = true,
+                        colors = customOutlinedTextFieldColors()
                     )
                 }
             }
@@ -227,8 +235,9 @@ fun RegisterFormScreen(
                                 Icon(Icons.Filled.ArrowDropDown, contentDescription = "Expand")
                             },
                             modifier = Modifier
-                                .menuAnchor()
+                                .menuAnchor(),
 //                                .weight(1f),
+                            colors = customOutlinedTextFieldColors()
                         )
                         ExposedDropdownMenu(
                             expanded = countryExpanded,
@@ -257,6 +266,7 @@ fun RegisterFormScreen(
                         label = { Text("Current city") },
                         singleLine = true,
 //                        modifier = Modifier.weight(1f),
+                        colors = customOutlinedTextFieldColors()
                     )
                 }
             }
@@ -271,6 +281,7 @@ fun RegisterFormScreen(
                 placeholder = { Text("e.g., Android, Backend Go, Data") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
+                colors = customOutlinedTextFieldColors()
             )
 
             Spacer(Modifier.height(12.dp))
@@ -283,6 +294,7 @@ fun RegisterFormScreen(
                 placeholder = { Text("e.g, email, phone, LinkedIn") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
+                colors = customOutlinedTextFieldColors()
             )
 
             Spacer(Modifier.height(12.dp))
@@ -296,7 +308,8 @@ fun RegisterFormScreen(
                 label = { Text("Short Bio (Optional)") },
                 minLines = 3,
                 maxLines = 4,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = customOutlinedTextFieldColors()
             )
 
             Button(
@@ -315,7 +328,10 @@ fun RegisterFormScreen(
                     )
                 },
                 modifier = Modifier.padding(12.dp).fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(Color.Red)
+                colors = ButtonDefaults.buttonColors(
+                    MaterialTheme.colorScheme.primary
+                ),
+                shape = RoundedCornerShape(8.dp)
             ) {
                 Text("Submit")
             }

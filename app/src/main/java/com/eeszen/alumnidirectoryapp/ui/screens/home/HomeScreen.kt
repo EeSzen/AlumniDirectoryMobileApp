@@ -1,5 +1,6 @@
 package com.eeszen.alumnidirectoryapp.ui.screens.home
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -36,6 +37,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,12 +53,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.eeszen.alumnidirectoryapp.data.model.Status
 import com.eeszen.alumnidirectoryapp.ui.navigation.Screen
 import com.eeszen.alumnidirectoryapp.ui.screens.dialog.BottomSheetDialog
+import com.eeszen.alumnidirectoryapp.ui.theme.customOutlinedTextFieldColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -98,7 +102,9 @@ fun HomeScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         Box (
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize().background(
+                color = MaterialTheme.colorScheme.surface
+            ),
             contentAlignment = Alignment.Center
         ){
             when(userStatus) {
@@ -110,12 +116,16 @@ fun HomeScreen(
                         modifier = Modifier.fillMaxSize()
                     ) {
                         Row(
-                            modifier = Modifier.fillMaxWidth().padding(16.dp),
+                            modifier = Modifier.fillMaxWidth().background(
+                                color = MaterialTheme.colorScheme.primary,
+                                shape = RoundedCornerShape(bottomStart = 40.dp)
+                            ).padding(16.dp),
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             // Search by name
                             OutlinedTextField(
                                 modifier = Modifier.weight(0.6f),
+                                colors = customOutlinedTextFieldColors(),
                                 shape = RoundedCornerShape(8.dp),
                                 value = searchName,
                                 onValueChange = {viewModel.onSearchName(it)},
@@ -148,10 +158,12 @@ fun HomeScreen(
                                             .menuAnchor()
                                             .fillMaxWidth(),
                                         singleLine = true,
+                                        colors = customOutlinedTextFieldColors()
                                     )
                                     ExposedDropdownMenu(
                                         expanded = optionsExpanded,
-                                        onDismissRequest = { optionsExpanded = false }
+                                        onDismissRequest = { optionsExpanded = false },
+                                        containerColor = MaterialTheme.colorScheme.surface
                                     ) {
                                         options.forEach { option ->
                                             DropdownMenuItem(
@@ -162,7 +174,8 @@ fun HomeScreen(
                                                         SortOption.GRAD_YEAR_NEWEST -> "Graduation year (Newest)"
                                                         SortOption.GRAD_YEAR_OLDEST -> "Graduation year (Oldest)"
                                                         SortOption.RECENTLY_UPDATED -> "Recently updated profiles"
-                                                    }
+                                                    },
+                                                    fontSize = 8.sp
                                                 ) },
                                                 onClick = {
                                                     viewModel.onSortOptionSelected(option)
@@ -183,17 +196,18 @@ fun HomeScreen(
                         }
                         LazyColumn (
                             contentPadding = PaddingValues(8.dp),
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize().padding(top = 10.dp)
                         ) {
                             items(alumni) { user ->
                                 Card(
                                     elevation = CardDefaults.cardElevation(4.dp),
                                     shape = RoundedCornerShape(12.dp),
-                                    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primaryContainer),
+                                    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
                                     modifier = Modifier.fillMaxWidth().padding(8.dp)
                                         .clickable {
                                             navController.navigate(Screen.Profile(user.id))
-                                        }
+                                        },
+                                    border = BorderStroke(width = 1.dp, color = Color.Black.copy(0.6f))
                                 ) {
                                     Column(
                                         modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -221,18 +235,18 @@ fun HomeScreen(
                                                 Box(
                                                     modifier = Modifier
                                                         .border(
-                                                            1.dp,
-                                                            color = MaterialTheme.colorScheme.outline,
+                                                            2.dp,
+                                                            color = MaterialTheme.colorScheme.onPrimary,
                                                             shape = CutCornerShape(8.dp)
                                                         )
                                                         .background(
-                                                            color = MaterialTheme.colorScheme.surfaceVariant,
+                                                            color = MaterialTheme.colorScheme.primary,
                                                             shape = CutCornerShape(8.dp)
                                                         )
                                                 ) {
                                                     Text(
                                                         "Class of ${user.graduationYear}",
-                                                        color = MaterialTheme.colorScheme.primary,
+                                                        color = MaterialTheme.colorScheme.onPrimary,
                                                         modifier = Modifier.padding(
                                                             start = 6.dp,
                                                             end = 6.dp,

@@ -35,8 +35,8 @@ fun UserCard(
 ) {
     Card(
         elevation = CardDefaults.cardElevation(4.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primaryContainer),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
