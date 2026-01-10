@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.eeszen.alumnidirectoryapp.ui.components.navbar.BottomNavigationBar
@@ -70,7 +71,7 @@ fun ComposeApp(){
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
-                BottomNavigationBar(navController)
+                BottomNavigationBar(navController = navController)
             }
         },
         topBar = {
@@ -82,16 +83,17 @@ fun ComposeApp(){
                 title = {
                     Text(
                         text = topBarTitle,
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
                     )
                 },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {}
-                    ) {
-                        Icon(Icons.Default.Menu, "")
-                    }
-                }
+//                navigationIcon = {
+//                    IconButton(
+//                        onClick = {}
+//                    ) {
+//                        Icon(Icons.Default.Menu, "")
+//                    }
+//                }
             )
         }
     ) { innerPadding ->

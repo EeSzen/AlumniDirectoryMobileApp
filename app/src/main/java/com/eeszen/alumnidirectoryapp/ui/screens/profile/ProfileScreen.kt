@@ -94,11 +94,15 @@ fun ProfileScreen(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .background(MaterialTheme.colorScheme.primaryContainer)
+            .background(MaterialTheme.colorScheme.surface)
     )
     // Profile section
     Box(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier.fillMaxSize().padding(
+            top = 16.dp,
+            start = 16.dp,
+            end = 16.dp
+        ),
         contentAlignment = Alignment.Center
     ) {
         LazyColumn(
@@ -156,7 +160,12 @@ fun ProfileScreen(
                                 .size(100.dp)
                                 .zIndex(1f)
                                 .align(Alignment.TopCenter)
-                            .background(color = Color.White, shape = CircleShape),
+                            .background(color = Color.White, shape = CircleShape)
+                            .border(
+                                width = 1.dp,
+                                color = Color.Black,
+                                shape = CircleShape
+                            ),
                             imageVector = Icons.Default.AccountCircle,
                             contentDescription = "",
                             tint = Color.Black,
@@ -166,7 +175,7 @@ fun ProfileScreen(
                         modifier = Modifier
                             .padding(top = 66.dp)
                             .fillMaxWidth(),
-                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceContainer),
+                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondary),
                         elevation = CardDefaults.cardElevation(4.dp),
                         border = BorderStroke(1.dp, color = Color.Black)
                     ) {
@@ -186,18 +195,18 @@ fun ProfileScreen(
                             Box(
                                 modifier = Modifier
                                     .border(
-                                        1.dp,
-                                        color = MaterialTheme.colorScheme.outline,
+                                        2.dp,
+                                        color = Color.White,
                                         shape = CutCornerShape(8.dp)
                                     )
                                     .background(
-                                        color = MaterialTheme.colorScheme.surfaceVariant,
+                                        color = MaterialTheme.colorScheme.primary,
                                         shape = CutCornerShape(8.dp)
                                     )
                             ) {
                                 Text(
                                     "Class of ${user.graduationYear}",
-                                    color = MaterialTheme.colorScheme.primary,
+                                    color = MaterialTheme.colorScheme.onPrimary,
                                     modifier = Modifier.padding(
                                         start = 6.dp,
                                         end = 6.dp,
@@ -215,11 +224,6 @@ fun ProfileScreen(
                         }
                     }
                 }
-                Spacer(Modifier.height(16.dp))
-                HorizontalDivider(
-                    thickness = 1.dp,
-                    color = Color.Gray
-                )
                 Spacer(Modifier.height(16.dp))
                 BasicInfo(user)
                 Spacer(Modifier.height(16.dp))
