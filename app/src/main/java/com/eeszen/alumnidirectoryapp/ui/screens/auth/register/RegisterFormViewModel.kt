@@ -31,8 +31,8 @@ class RegisterFormViewModel @Inject constructor(
 
             val baseUser = User(
                 id = authUser.uid,
-                fullName = authUser.displayName.orEmpty(),
-                email = authUser.email.orEmpty()
+                fullName = authUser.displayName,
+                email = authUser.email
             )
             val firestoreUser = repo.getAlumniById(authUser.uid)
             _userData.value = firestoreUser ?: baseUser
