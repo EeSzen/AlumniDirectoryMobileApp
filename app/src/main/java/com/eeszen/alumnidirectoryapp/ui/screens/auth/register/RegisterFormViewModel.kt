@@ -17,26 +17,33 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class RegisterFormViewModel @Inject constructor(
     private val authService: AuthService,
-    private val repo: AlumniRepo = AlumniRepo.getInstance()
+    private val repo: AlumniRepo
 ): ViewModel() {
     private val _userData = MutableStateFlow(User())
     val userData = _userData.asStateFlow()
     private val _success = MutableSharedFlow<Unit>()
     val success = _success.asSharedFlow()
+    private val _countries = MutableStateFlow<List<String>>(emptyList())
+    val countries = _countries.asStateFlow()
     fun getCurrentUser() {
         viewModelScope.launch(Dispatchers.IO) {
             val authUser = authService.getCurrentUser() ?: return@launch
 
             val baseUser = User(
                 id = authUser.uid,
-                fullName = authUser.displayName.orEmpty(),
-                email = authUser.email.orEmpty()
+                fullName = authUser.displayName,
+                email = authUser.email
             )
             val firestoreUser = repo.getAlumniById(authUser.uid)
             _userData.value = firestoreUser ?: baseUser
         }
     }
     fun getAuthUser() = authService.getCurrentUser()
+    fun getCountries() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _countries.value = repo.getCountries()
+        }
+    }
     fun updateUser(
         fullName: String,
         department: String,

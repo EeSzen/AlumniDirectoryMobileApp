@@ -7,15 +7,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
-import androidx.compose.material.icons.filled.CheckCircleOutline
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Groups3
 import androidx.compose.material.icons.filled.PersonAddAlt1
 import androidx.compose.material.icons.filled.VerifiedUser
@@ -53,16 +55,29 @@ fun AdminDashboardScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize()
-            .background(MaterialTheme.colorScheme.secondaryContainer),
+        modifier = Modifier.fillMaxSize().background(
+            color = MaterialTheme.colorScheme.surface)
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().background(
+                color = MaterialTheme.colorScheme.primary,
+                shape = RoundedCornerShape(bottomStart = 40.dp)
+            ).padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 32.dp)
+        ) {
+            Text(
+                text = "Hello Admin",
+                style = MaterialTheme.typography.displaySmall,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        }
+        Spacer(Modifier.height(16.dp))
         Box(
             modifier = Modifier.fillMaxWidth().padding(16.dp)
-                .background(MaterialTheme.colorScheme.surface,
+                .background(MaterialTheme.colorScheme.secondary,
                     RoundedCornerShape(8.dp))
                 .border(
                     2.dp,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = Color.Black.copy(alpha = 0.6f),
                     RoundedCornerShape(8.dp))
         ) {
             Column (
@@ -82,7 +97,7 @@ fun AdminDashboardScreen(
                     Card(
                         elevation = CardDefaults.cardElevation(4.dp),
                         shape = RoundedCornerShape(8.dp),
-                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primaryContainer),
+                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceVariant),
                         modifier = Modifier.weight(1f)
                             .clickable { navController.navigate(Screen.ApprovedAlumni) }
                     ) {
@@ -104,11 +119,13 @@ fun AdminDashboardScreen(
                             ) {
                                 Text(
                                     "Approved Alumni",
-                                    style = MaterialTheme.typography.titleSmall
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = Color.White
                                 )
                                 Text(
-                                    "$approvedUserCount Users",
-                                    style = MaterialTheme.typography.titleLarge
+                                    "$approvedUserCount",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    color = MaterialTheme.colorScheme.primary
                                 )
                             }
                         }
@@ -117,7 +134,7 @@ fun AdminDashboardScreen(
                     Card(
                         elevation = CardDefaults.cardElevation(4.dp),
                         shape = RoundedCornerShape(8.dp),
-                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primaryContainer),
+                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceVariant),
                         modifier = Modifier.weight(1f)
                             .clickable { navController.navigate(Screen.PendingRegistrations) }
                     ) {
@@ -139,11 +156,13 @@ fun AdminDashboardScreen(
                             ) {
                                 Text(
                                     "Pending Registrations",
-                                    style = MaterialTheme.typography.titleSmall
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = Color.White
                                 )
                                 Text(
-                                    "${pendingUserCount} Users",
-                                    style = MaterialTheme.typography.titleLarge
+                                    "${pendingUserCount}",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    color = MaterialTheme.colorScheme.primary
                                 )
                             }
                         }
@@ -159,7 +178,7 @@ fun AdminDashboardScreen(
                     Card(
                         elevation = CardDefaults.cardElevation(4.dp),
                         shape = RoundedCornerShape(8.dp),
-                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primaryContainer),
+                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceVariant),
                         modifier = Modifier.weight(1f)
                             .clickable { navController.navigate(Screen.RejectedAlumni) }
                     ) {
@@ -181,11 +200,13 @@ fun AdminDashboardScreen(
                             ) {
                                 Text(
                                     "Rejected Alumni",
-                                    style = MaterialTheme.typography.titleSmall
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = Color.White
                                 )
                                 Text(
-                                    "$rejectedUserCount Users",
-                                    style = MaterialTheme.typography.titleLarge
+                                    "$rejectedUserCount",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    color = MaterialTheme.colorScheme.primary
                                 )
                             }
                         }
@@ -194,7 +215,7 @@ fun AdminDashboardScreen(
                     Card(
                         elevation = CardDefaults.cardElevation(4.dp),
                         shape = RoundedCornerShape(8.dp),
-                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primaryContainer),
+                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceVariant),
                         modifier = Modifier.weight(1f)
                             .clickable { }
                     ) {
@@ -207,7 +228,7 @@ fun AdminDashboardScreen(
                                 modifier = Modifier
                                     .size(48.dp)
                                     .background(color = Color.White, shape = CircleShape),
-                                imageVector = Icons.Default.CheckCircleOutline,
+                                imageVector = Icons.Default.CheckCircle,
                                 contentDescription = "",
                                 tint = Color.Black,
                             )
@@ -216,11 +237,13 @@ fun AdminDashboardScreen(
                             ) {
                                 Text(
                                     "Recent Approvals",
-                                    style = MaterialTheme.typography.titleSmall
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = Color.White
                                 )
                                 Text(
-                                    " Users",
-                                    style = MaterialTheme.typography.titleLarge
+                                    "Users",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    color = MaterialTheme.colorScheme.primary
                                 )
                             }
                         }
@@ -231,11 +254,11 @@ fun AdminDashboardScreen(
 
         Box(
             modifier = Modifier.fillMaxWidth().padding(16.dp)
-                .background(MaterialTheme.colorScheme.surface,
+                .background(MaterialTheme.colorScheme.secondary,
                     RoundedCornerShape(8.dp))
                 .border(
                     2.dp,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = Color.Black.copy(alpha = 0.6f),
                     RoundedCornerShape(8.dp))
         ) {
             Column (
@@ -250,7 +273,8 @@ fun AdminDashboardScreen(
                 Card(
                     elevation = CardDefaults.cardElevation(4.dp),
                     shape = RoundedCornerShape(8.dp),
-                    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primaryContainer),
+                    colors = CardDefaults.cardColors(
+                        MaterialTheme.colorScheme.surfaceVariant),
                     modifier = Modifier.fillMaxWidth()
                         .clickable { navController.navigate(Screen.ManageUsers) }
                 ) {
@@ -268,15 +292,17 @@ fun AdminDashboardScreen(
                             tint = Color.Black,
                         )
                         Column(
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
                         ) {
                             Text(
                                 "All Users",
-                                style = MaterialTheme.typography.titleSmall
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Color.White
                             )
                             Text(
-                                "$allUsersCount Users",
-                                style = MaterialTheme.typography.titleLarge
+                                "$allUsersCount",
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.primary
                             )
                         }
                     }

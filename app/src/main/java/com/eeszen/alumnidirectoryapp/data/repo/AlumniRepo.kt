@@ -14,8 +14,11 @@ interface AlumniRepo {
     suspend fun getApprovedAlumnis(): List<User>
     suspend fun getPendingAlumnis(): List<User>
     suspend fun getRejectedAlumnis(): List<User>
-
     suspend fun updateUserStatus(id: String, status: Status)
+
+    //Metadata
+    suspend fun getTechStacks(): List<String>
+    suspend fun getCountries(): List<String>
 
     companion object {
         private var instance: AlumniRepo? = null

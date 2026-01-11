@@ -1,10 +1,13 @@
 package com.eeszen.alumnidirectoryapp.ui.screens.profile
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.lifecycle.viewModelScope
+import com.eeszen.alumnidirectoryapp.data.model.Status
 import com.eeszen.alumnidirectoryapp.data.model.User
 import com.eeszen.alumnidirectoryapp.data.repo.AlumniRepo
+import com.eeszen.alumnidirectoryapp.data.repo.UserRepo
 import com.eeszen.alumnidirectoryapp.service.AuthService
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -17,22 +20,34 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     private val authService: AuthService,
-    private val repo: AlumniRepo
+    private val repo: AlumniRepo,
+    private val savedStateHandle: SavedStateHandle,
+    private val userRepo: UserRepo
 ): ViewModel() {
     private val _user = MutableStateFlow(User())
     val user = _user.asStateFlow()
+    private val _isAdmin = MutableStateFlow(false)
+    val isAdmin = _isAdmin.asStateFlow()
     private val _success = MutableSharedFlow<Unit>()
     val success = _success.asSharedFlow()
-
-    fun getUser() {
+    private val userId = savedStateHandle.get<String>("id")!!
+    init {
+        getUser(userId)
+        checkIsAdmin()
+    }
+    fun getUser(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val currentUser = authService.getCurrentUser() ?: return@launch
-            repo.getAlumniById(currentUser.uid)?.let {
+            repo.getAlumniById(id)?.let {
                 _user.value = it
             }
         }
     }
-    fun getAuthUser() = authService.getCurrentUser()
+    fun checkIsAdmin() {
+        val uid = authService.getCurrentUser()?.uid ?: return
+        viewModelScope.launch(Dispatchers.IO) {
+            _isAdmin.value = userRepo.isAdmin(uid)
+        }
+    }
     fun updateUser(
         fullName: String,
         department: String,
@@ -43,10 +58,9 @@ class EditProfileViewModel @Inject constructor(
         country: String,
         city: String,
         contactPref: String,
-        shortBio: String
+        shortBio: String,
+        status: Status
     ) {
-        val currentUser = authService.getCurrentUser() ?: return
-
         val updatedUser = user.value.copy(
             fullName = fullName,
             department = department,
@@ -57,11 +71,12 @@ class EditProfileViewModel @Inject constructor(
             currentCountry = country,
             currentCity = city,
             contactPreference = contactPref,
-            shortBio = shortBio
+            shortBio = shortBio,
+            status = status
         )
         viewModelScope.launch(Dispatchers.IO) {
             repo.updateAlumni(
-                id = currentUser.uid,
+                id = userId,
                 user = updatedUser
             )
             _success.emit(Unit)

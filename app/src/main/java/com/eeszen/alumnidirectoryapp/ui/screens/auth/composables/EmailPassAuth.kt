@@ -1,6 +1,7 @@
 package com.eeszen.alumnidirectoryapp.ui.screens.auth.composables
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -8,9 +9,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -23,9 +28,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.eeszen.alumnidirectoryapp.R
+import com.eeszen.alumnidirectoryapp.ui.theme.customOutlinedTextFieldColors
 
 @Composable
 fun EmailPassAuth(
@@ -43,24 +51,46 @@ fun EmailPassAuth(
     ) {
         var email by rememberSaveable { mutableStateOf("") }
         var password by rememberSaveable { mutableStateOf("") }
+        var showPassword by rememberSaveable { mutableStateOf(false) }
 
         OutlinedTextField(
             value = email,
             onValueChange = {email = it},
             placeholder = { Text("Email") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = customOutlinedTextFieldColors()
         )
         OutlinedTextField(
             value = password,
             onValueChange = {password = it},
             placeholder = { Text("Password") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = customOutlinedTextFieldColors(),
+            visualTransformation =
+                if (showPassword) {
+                    VisualTransformation.None
+                } else {
+                    PasswordVisualTransformation()
+                },
+            trailingIcon = {
+                Icon(
+                    if (showPassword) {
+                        Icons.Filled.Visibility
+                    } else {
+                        Icons.Filled.VisibilityOff
+                    },
+                    "",
+                    modifier = Modifier.clickable {showPassword = !showPassword}
+                    )
+            }
         )
         Button(
             onClick = {buttonAction(email,password)},
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
-            colors = ButtonDefaults.buttonColors(Color(0xFFE74C4C))
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            )
         ) {
             Text(actionButtonText)
         }
