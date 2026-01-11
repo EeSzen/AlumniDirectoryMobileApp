@@ -15,6 +15,7 @@ interface AlumniRepo {
     suspend fun getPendingAlumnis(): List<User>
     suspend fun getRejectedAlumnis(): List<User>
     suspend fun updateUserStatus(id: String, status: Status)
+    suspend fun getRecentApprovedUsers(days: Int = 7): List<User>
 
     //Metadata
     suspend fun getTechStacks(): List<String>

@@ -16,4 +16,5 @@ sealed class Screen{
     @Serializable object ApprovedAlumni:Screen()
     @Serializable object RejectedAlumni:Screen()
     @Serializable object ManageUsers:Screen()
+    @Serializable object RecentApprovals:Screen()
 }

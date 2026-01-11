@@ -46,11 +46,13 @@ fun AdminDashboardScreen(
     val approvedUserCount = viewModel.approvedUserCount.collectAsStateWithLifecycle().value
     val rejectedUserCount = viewModel.rejectedUserCount.collectAsStateWithLifecycle().value
     val allUsersCount = viewModel.allUsersCount.collectAsStateWithLifecycle().value
+    val recentApprovedCount = viewModel.recentApprovedCount.collectAsStateWithLifecycle().value
 
     LaunchedEffect(Unit) {
         viewModel.getPendingUsersCount()
         viewModel.getApprovedUsersCount()
         viewModel.getRejectedUsersCount()
+        viewModel.getRecentApprovals()
         viewModel.getAllUsersCount()
     }
 
@@ -217,7 +219,7 @@ fun AdminDashboardScreen(
                         shape = RoundedCornerShape(8.dp),
                         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceVariant),
                         modifier = Modifier.weight(1f)
-                            .clickable { }
+                            .clickable { navController.navigate(Screen.RecentApprovals) }
                     ) {
                         Row(
                             modifier = Modifier.padding(8.dp),
@@ -241,7 +243,7 @@ fun AdminDashboardScreen(
                                     color = Color.White
                                 )
                                 Text(
-                                    "Users",
+                                    "$recentApprovedCount",
                                     style = MaterialTheme.typography.titleLarge,
                                     color = MaterialTheme.colorScheme.primary
                                 )
