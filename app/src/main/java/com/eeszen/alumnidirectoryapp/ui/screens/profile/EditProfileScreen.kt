@@ -4,13 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -101,9 +101,10 @@ fun EditProfileScreen(
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
-        Column(
+        LazyColumn(
             modifier = Modifier.fillMaxSize()
         ) {
+            item {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
@@ -162,7 +163,7 @@ fun EditProfileScreen(
 
             // Graduation year
             val years = mutableListOf<Int>()
-            for (i in startYear..endYear){
+            for (i in startYear..endYear) {
                 years.add(i)
             }
             var yearExpanded by remember { mutableStateOf(false) }
@@ -296,7 +297,9 @@ fun EditProfileScreen(
             OutlinedTextField(
                 value = shortBio,
                 onValueChange = {
-                    if (it.length <= 100) { shortBio = it }
+                    if (it.length <= 100) {
+                        shortBio = it
+                    }
                 },
                 label = { Text("Short Bio") },
                 maxLines = 3,
@@ -358,6 +361,7 @@ fun EditProfileScreen(
             ) {
                 Text("Update Profile")
             }
+        }
         }
     }
 }

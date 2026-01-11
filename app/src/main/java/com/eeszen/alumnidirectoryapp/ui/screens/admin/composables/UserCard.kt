@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.eeszen.alumnidirectoryapp.data.model.Status
 import com.eeszen.alumnidirectoryapp.data.model.User
 
 @Composable
@@ -75,57 +77,106 @@ fun UserCard(
             }
             Spacer(Modifier.height(2.dp))
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().background(
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(16.dp)
+                ),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Batch")
                 Text(
-                    text = user.graduationYear.toString()
+                    "Batch",
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp)
+                )
+                Text(
+                    text = user.graduationYear.toString(),
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp)
                 )
             }
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().background(
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(16.dp)
+                ),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Position")
                 Text(
-                    text = user.currentJob
+                    "Position",
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp)
+                )
+                Text(
+                    text = user.currentJob,
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp)
                 )
             }
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().background(
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(16.dp)
+                ),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Company")
                 Text(
-                    text = user.currentCompany
+                    "Company",
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp)
+                )
+                Text(
+                    text = user.currentCompany,
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp)
+
                 )
             }
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().background(
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(16.dp)
+                ),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Location")
                 Text(
-                    text = user.currentCountry
+                    "Location",
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp)
+                )
+                Text(
+                    text = user.currentCountry,
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp)
                 )
             }
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().background(
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(16.dp)
+                ),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Primary Tech Stack")
                 Text(
-                    text = user.primaryTechStack
+                    "Primary Tech Stack",
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp)
+                )
+                Text(
+                    text = user.primaryTechStack,
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp)
                 )
             }
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().background(
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(16.dp)
+                ),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Status")
                 Text(
-                    text = user.status.name
+                    "Status",
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp)
+                )
+                Text(
+                    text = user.status.name,
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp),
+                    color = when(user.status) {
+                        Status.APPROVED -> Color.Green
+                        Status.PENDING -> Color.Yellow
+                        Status.REJECTED -> Color.Red
+                        Status.INACTIVE -> Color.Gray
+                    }
                 )
             }
             content()

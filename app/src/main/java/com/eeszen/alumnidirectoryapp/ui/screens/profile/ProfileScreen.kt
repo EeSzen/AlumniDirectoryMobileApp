@@ -67,9 +67,19 @@ fun ProfileScreen(
             Text("Loading...")
         }
         return
-    }else if (user.status != Status.APPROVED){
+    }else if (user.status == Status.PENDING){
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text("Waiting for approval...")
+        }
+        return
+    }else if (user.status == Status.REJECTED){
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("Status Rejected...")
+        }
+        return
+    }else if (user.status == Status.INACTIVE){
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("Status Inactive...")
         }
         return
     }
