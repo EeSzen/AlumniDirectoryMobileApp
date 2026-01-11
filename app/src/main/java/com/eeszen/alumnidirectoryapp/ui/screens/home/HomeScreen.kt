@@ -174,7 +174,7 @@ fun HomeScreen(
                                                         SortOption.GRAD_YEAR_OLDEST -> "Graduation year (Oldest)"
                                                         SortOption.RECENTLY_UPDATED -> "Recently updated profiles"
                                                     },
-                                                    fontSize = 8.sp
+                                                    fontSize = 12.sp
                                                 ) },
                                                 onClick = {
                                                     viewModel.onSortOptionSelected(option)

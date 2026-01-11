@@ -23,6 +23,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -188,7 +189,8 @@ fun EditProfileScreen(
 
                 ExposedDropdownMenu(
                     expanded = yearExpanded,
-                    onDismissRequest = { yearExpanded = false }
+                    onDismissRequest = { yearExpanded = false },
+                    containerColor = MaterialTheme.colorScheme.surface
                 ) {
                     years.forEach {
                         DropdownMenuItem(
@@ -247,7 +249,8 @@ fun EditProfileScreen(
                     )
                     ExposedDropdownMenu(
                         expanded = countryExpanded,
-                        onDismissRequest = { countryExpanded = false }
+                        onDismissRequest = { countryExpanded = false },
+                        containerColor = MaterialTheme.colorScheme.surface
                     ) {
                         countries.forEach { c ->
                             DropdownMenuItem(
@@ -326,7 +329,8 @@ fun EditProfileScreen(
                     )
                     ExposedDropdownMenu(
                         expanded = statusExpanded,
-                        onDismissRequest = { statusExpanded = false }
+                        onDismissRequest = { statusExpanded = false },
+                        containerColor = MaterialTheme.colorScheme.surface
                     ) {
                         statusOptions.forEach { status ->
                             DropdownMenuItem(

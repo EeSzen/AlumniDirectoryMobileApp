@@ -162,7 +162,8 @@ fun RegisterFormScreen(
 
                 ExposedDropdownMenu(
                     expanded = yearExpanded,
-                    onDismissRequest = { yearExpanded = false }
+                    onDismissRequest = { yearExpanded = false },
+                    containerColor = MaterialTheme.colorScheme.surface
                 ) {
                     years.forEach {
                         DropdownMenuItem(
@@ -241,7 +242,8 @@ fun RegisterFormScreen(
                         )
                         ExposedDropdownMenu(
                             expanded = countryExpanded,
-                            onDismissRequest = { countryExpanded = false }
+                            onDismissRequest = { countryExpanded = false },
+                            containerColor = MaterialTheme.colorScheme.surface
                         ) {
                             countries.forEach { c ->
                                 DropdownMenuItem(
