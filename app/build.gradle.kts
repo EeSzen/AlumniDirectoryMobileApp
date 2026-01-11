@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
+    implementation(libs.firebase.storage)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -79,6 +80,12 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // profile photo
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.storage)
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2")
 
 //    // Compose
 //    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.4")

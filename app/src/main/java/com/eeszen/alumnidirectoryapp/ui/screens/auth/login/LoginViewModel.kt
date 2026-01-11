@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.lifecycle.viewModelScope
+import com.eeszen.alumnidirectoryapp.core.utils.SnackbarController
+import com.eeszen.alumnidirectoryapp.core.utils.SnackbarEvent
 import com.eeszen.alumnidirectoryapp.service.AuthService
 import jakarta.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -26,19 +28,36 @@ class LoginViewModel @Inject constructor(
         if(result != null) {
             viewModelScope.launch {
                 _error.emit(result)
+                SnackbarController.sendEvent(
+                    SnackbarEvent(result)
+                )
             }
             return
         }
         viewModelScope.launch(Dispatchers.IO) {
-            authService.signInWithEmail(email, password)
-            _success.emit(Unit)
+            try {
+                authService.signInWithEmail(email, password)
+                _success.emit(Unit)
+            } catch (e: Exception) {
+                val msg = e.message ?: "Sign in failed"
+                Log.d("LoginViewModel", msg, e)
+                _error.emit(msg)
+                SnackbarController.sendEvent(SnackbarEvent(msg))
+            }
         }
     }
     fun signInWithGoogle(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = authService.signInWithGoogle(context)
-            if(result) {
-                _success.emit(Unit)
+            try {
+                val result = authService.signInWithGoogle(context)
+                if(result) {
+                    _success.emit(Unit)
+                }
+            }catch (e:Exception){
+                val msg = e.message ?: "Google sign in failed"
+                Log.d("LoginViewModel", msg, e)
+                _error.emit(msg)
+                SnackbarController.sendEvent(SnackbarEvent(msg))
             }
         }
     }
@@ -50,6 +69,7 @@ class LoginViewModel @Inject constructor(
         } catch (e: Exception) {
             Log.d("debugging", e.message.toString())
             e.message.toString()
+
         }
     }
 }

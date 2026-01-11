@@ -1,5 +1,8 @@
 package com.eeszen.alumnidirectoryapp.ui.screens.profile
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -39,17 +42,21 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
 import com.eeszen.alumnidirectoryapp.data.model.Status
+import com.eeszen.alumnidirectoryapp.service.AuthService
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditProfileScreen(
     navController: NavController,
-    viewModel: EditProfileViewModel = hiltViewModel()
+    viewModel: EditProfileViewModel = hiltViewModel(),
+    authService: AuthService = AuthService()
 ) {
     val user = viewModel.user.collectAsStateWithLifecycle().value
     val isAdmin = viewModel.isAdmin.collectAsStateWithLifecycle().value
+    val currentUid = authService.getCurrentUser()?.uid
 
     var fullName by remember { mutableStateOf("") }
     var department by remember { mutableStateOf("") }
@@ -85,6 +92,18 @@ fun EditProfileScreen(
         }
     }
 
+    // Profile Photo
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    val imagePickerLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            selectedImageUri = uri
+            uri?.let {
+                viewModel.uploadAndUpdateProfilePhoto(it)
+            }
+        }
+
+
     val currentYear = Calendar.getInstance().get(Calendar.YEAR)
     val startYear = currentYear - 100
     val endYear = currentYear
@@ -115,17 +134,29 @@ fun EditProfileScreen(
                     contentAlignment = Alignment.TopCenter
                 ) {
                     // Avatar
-                    Icon(
-                        modifier = Modifier
-                            .size(100.dp)
-                            .background(color = Color.White, shape = CircleShape),
-                        imageVector = Icons.Default.AccountCircle,
-                        contentDescription = "",
-                        tint = Color.Black,
-                    )
+                    if (user.profilePhoto.isNotEmpty()) {
+                        AsyncImage(
+                            model = user.profilePhoto,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(100.dp)
+                                .background(Color.White, CircleShape)
+                        )
+                    } else {
+                        Icon(
+                            modifier = Modifier
+                                .size(100.dp)
+                                .background(Color.White, CircleShape),
+                            imageVector = Icons.Default.AccountCircle,
+                            contentDescription = "",
+                            tint = Color.Black,
+                        )
+                    }
                     // Camera button
                     IconButton(
-                        onClick = {},
+                        onClick = {
+                            imagePickerLauncher.launch("image/*")
+                        },
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .offset(x = 30.dp, y = 4.dp)
@@ -309,7 +340,7 @@ fun EditProfileScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             // Change status - only admin
-            if (isAdmin) {
+            if (isAdmin && user.id != currentUid) {
                 ExposedDropdownMenuBox(
                     expanded = statusExpanded,
                     onExpandedChange = { statusExpanded = !statusExpanded },

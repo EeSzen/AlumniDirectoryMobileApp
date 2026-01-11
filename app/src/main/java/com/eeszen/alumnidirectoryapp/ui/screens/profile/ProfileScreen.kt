@@ -38,16 +38,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
 import com.eeszen.alumnidirectoryapp.R
 import com.eeszen.alumnidirectoryapp.data.model.Status
 import com.eeszen.alumnidirectoryapp.data.model.User
@@ -64,22 +69,22 @@ fun ProfileScreen(
     val loggedInUser = viewModel.getAuthUser()
     if (user == null) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Loading...")
+            Text("Loading...", fontSize = 20.sp, fontWeight = FontWeight.Bold)
         }
         return
     }else if (user.status == Status.PENDING){
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Waiting for approval...")
+            Text("Waiting for approval...", fontSize = 20.sp, fontWeight = FontWeight.Bold)
         }
         return
     }else if (user.status == Status.REJECTED){
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Status Rejected...")
+            Text("Status Rejected !!!", fontSize = 20.sp, fontWeight = FontWeight.Bold)
         }
         return
     }else if (user.status == Status.INACTIVE){
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Status Inactive...")
+            Text("Status Inactive...", fontSize = 20.sp, fontWeight = FontWeight.Bold)
         }
         return
     }
@@ -161,22 +166,44 @@ fun ProfileScreen(
                             }
                         }
                     }
+
                     // Profile avatar
-                    Icon(
-                        modifier = Modifier
+                    if (user.profilePhoto.isNotEmpty()) {
+                        AsyncImage(
+                            model = user.profilePhoto,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
                                 .size(100.dp)
                                 .zIndex(1f)
                                 .align(Alignment.TopCenter)
-                            .background(color = Color.White, shape = CircleShape)
-                            .border(
-                                width = 1.dp,
-                                color = Color.Black,
-                                shape = CircleShape
-                            ),
+                                .clip(CircleShape)
+                                .background(Color.White, CircleShape)
+                                .border(
+                                    width = 1.dp,
+                                    color = Color.Black,
+                                    shape = CircleShape
+                                )
+                        )
+                    } else {
+                        Icon(
+                            modifier = Modifier
+                                .size(100.dp)
+                                .zIndex(1f)
+                                .align(Alignment.TopCenter)
+                                .clip(CircleShape)
+                                .background(color = Color.White, shape = CircleShape)
+                                .border(
+                                    width = 1.dp,
+                                    color = Color.Black,
+                                    shape = CircleShape
+                                ),
                             imageVector = Icons.Default.AccountCircle,
                             contentDescription = "",
                             tint = Color.Black,
                         )
+                    }
+
                     // Profile header section
                     Card(
                         modifier = Modifier

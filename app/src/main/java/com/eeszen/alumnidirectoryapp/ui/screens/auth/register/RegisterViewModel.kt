@@ -61,7 +61,7 @@ class RegisterViewModel @Inject constructor(
                     id = uid,
                     fullName = authUser.displayName,
                     email = authUser.email,
-                    profilePhoto = authUser.photoUrl ?: ""
+//                    profilePhoto = authUser.photoUrl ?: ""
                 )
                 repo.addAlumni(newUser)
             }

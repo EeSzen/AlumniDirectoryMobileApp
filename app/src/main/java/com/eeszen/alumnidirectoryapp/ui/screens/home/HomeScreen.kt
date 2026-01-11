@@ -47,15 +47,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
 import com.eeszen.alumnidirectoryapp.data.model.Status
 import com.eeszen.alumnidirectoryapp.ui.navigation.Screen
 import com.eeszen.alumnidirectoryapp.ui.screens.dialog.BottomSheetDialog
@@ -223,14 +227,32 @@ fun HomeScreen(
                                                 horizontalArrangement = Arrangement.SpaceBetween
                                             ) {
                                                 // Profile avatar
-                                                Icon(
-                                                    modifier = Modifier
-                                                        .size(64.dp)
-                                                        .background(color = Color.White, shape = CircleShape),
-                                                    imageVector = Icons.Default.AccountCircle,
-                                                    contentDescription = "",
-                                                    tint = Color.Black,
-                                                )
+                                                if (user.profilePhoto.isNotBlank()){
+                                                    AsyncImage(
+                                                        model = user.profilePhoto,
+                                                        contentDescription = "",
+                                                        contentScale = ContentScale.Crop,
+                                                        modifier = Modifier
+                                                            .size(64.dp)
+                                                            .zIndex(1f)
+                                                            .clip(CircleShape)
+                                                            .background(Color.White, CircleShape)
+                                                            .border(
+                                                                width = 1.dp,
+                                                                color = Color.Black,
+                                                                shape = CircleShape
+                                                            )
+                                                    )
+                                                }else{
+                                                    Icon(
+                                                        modifier = Modifier
+                                                            .size(64.dp)
+                                                            .background(color = Color.White, shape = CircleShape),
+                                                        imageVector = Icons.Default.AccountCircle,
+                                                        contentDescription = "",
+                                                        tint = Color.Black,
+                                                    )
+                                                }
                                                 Box(
                                                     modifier = Modifier
                                                         .border(

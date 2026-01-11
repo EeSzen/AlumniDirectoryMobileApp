@@ -138,6 +138,13 @@ class AlumniRepoFireImpl:AlumniRepo {
         }
     }
 
+    override suspend fun updateUserPhoto(id: String, photoUrl: String) {
+        getAlumnisCollection()
+            .document(id)
+            .update("profilePhoto", photoUrl)
+            .await()
+    }
+
     //Metadata
     override suspend fun getTechStacks(): List<String> {
         val snap =  db.collection("metadata")

@@ -3,6 +3,9 @@ package com.eeszen.alumnidirectoryapp.ui.screens.auth.register
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.eeszen.alumnidirectoryapp.core.utils.SnackbarController
+import com.eeszen.alumnidirectoryapp.core.utils.SnackbarEvent
 import com.eeszen.alumnidirectoryapp.data.model.User
 import com.eeszen.alumnidirectoryapp.data.repo.AlumniRepo
 import com.eeszen.alumnidirectoryapp.service.AuthService
@@ -25,18 +28,28 @@ class RegisterFormViewModel @Inject constructor(
     val success = _success.asSharedFlow()
     private val _countries = MutableStateFlow<List<String>>(emptyList())
     val countries = _countries.asStateFlow()
-    fun getCurrentUser() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val authUser = authService.getCurrentUser() ?: return@launch
 
-            val baseUser = User(
-                id = authUser.uid,
-                fullName = authUser.displayName,
-                email = authUser.email
-            )
-            val firestoreUser = repo.getAlumniById(authUser.uid)
-            _userData.value = firestoreUser ?: baseUser
+    fun getCurrentUser() {
+        try {
+            viewModelScope.launch(Dispatchers.IO) {
+                val authUser = authService.getCurrentUser() ?: return@launch
+
+                val baseUser = User(
+                    id = authUser.uid,
+                    fullName = authUser.displayName,
+                    email = authUser.email
+                )
+                val firestoreUser = repo.getAlumniById(authUser.uid)
+                _userData.value = firestoreUser ?: baseUser
+            }
+        }catch (e:Exception){
+            viewModelScope.launch {
+                SnackbarController.sendEvent(
+                    SnackbarEvent(e.message.toString())
+                )
+            }
         }
+
     }
     fun getAuthUser() = authService.getCurrentUser()
     fun getCountries() {
