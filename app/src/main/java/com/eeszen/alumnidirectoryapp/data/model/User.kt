@@ -26,7 +26,8 @@ data class User (
     val role: Role = Role.ALUMNI,
 
     val createdAt: Long = System.currentTimeMillis(),
-    val updatedAt: Long = System.currentTimeMillis()
+    val updatedAt: Long = System.currentTimeMillis(),
+    val approvedAt: Long? = null
 )   
 enum class Status {
     PENDING, APPROVED, REJECTED, INACTIVE
