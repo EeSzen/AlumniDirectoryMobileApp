@@ -10,7 +10,7 @@ sealed class Screen{
     @Serializable object Splash:Screen()
     @Serializable object Login:Screen()
     @Serializable data class Profile(val id: String):Screen()
-    @Serializable object EditProfile:Screen()
+    @Serializable data class EditProfile(val id: String):Screen()
     @Serializable object AdminDashboard:Screen()
     @Serializable object PendingRegistrations:Screen()
     @Serializable object ApprovedAlumni:Screen()

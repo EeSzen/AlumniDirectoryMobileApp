@@ -1,5 +1,6 @@
 package com.eeszen.alumnidirectoryapp.ui.screens.admin.pending
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -47,17 +50,37 @@ fun PendingRegistrationsScreen(
                     ) {
                         Button(
                             modifier = Modifier.weight(1f),
-                            onClick = { viewModel.approveUser(user.id) },
+                            onClick = { viewModel.rejectUser(user.id) },
                             shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.surface
+                            ),
+                            border = BorderStroke(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.primary
+                            )
                         ) {
-                            Text("Approve")
+                            Text(
+                                "Reject",
+                                color = MaterialTheme.colorScheme.primary
+                            )
                         }
                         Button(
                             modifier = Modifier.weight(1f),
-                            onClick = { viewModel.rejectUser(user.id) },
+                            onClick = { viewModel.approveUser(user.id) },
                             shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary
+                            ),
+                            border = BorderStroke(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.primary
+                            )
                         ) {
-                            Text("Reject")
+                            Text(
+                                "Approve",
+                                 color = MaterialTheme.colorScheme.onPrimary
+                            )
                         }
                     }
                 }
