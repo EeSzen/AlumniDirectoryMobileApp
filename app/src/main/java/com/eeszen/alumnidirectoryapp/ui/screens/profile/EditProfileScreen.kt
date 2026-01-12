@@ -44,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.eeszen.alumnidirectoryapp.data.model.Status
+import com.eeszen.alumnidirectoryapp.data.model.validation.UpdateUserForm
 import com.eeszen.alumnidirectoryapp.service.AuthService
 import java.util.Calendar
 
@@ -105,7 +106,7 @@ fun EditProfileScreen(
 
 
     val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-    val startYear = currentYear - 100
+    val startYear = currentYear - 20
     val endYear = currentYear
 
     // Country dropdown
@@ -377,18 +378,20 @@ fun EditProfileScreen(
             }
             Button(
                 onClick = {
-                    viewModel.updateUser(
-                        fullName = fullName,
-                        department = department,
-                        gradYear = gradYear.toInt(),
-                        jobTitle = jobTitle,
-                        company = company,
-                        techStack = techStack,
-                        country = country,
-                        city = city,
-                        contactPref = contactPref,
-                        shortBio = shortBio,
-                        status = currentStatus
+                    viewModel.submit(
+                        UpdateUserForm(
+                            fullName = fullName,
+                            department = department,
+                            gradYear = gradYear.toInt(),
+                            jobTitle = jobTitle,
+                            company = company,
+                            techStack = techStack,
+                            country = country,
+                            city = city,
+                            contactPref = contactPref,
+                            shortBio = shortBio,
+                            status = currentStatus
+                        )
                     )
                 },
                 modifier = Modifier.padding(12.dp).fillMaxWidth(),

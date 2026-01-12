@@ -43,8 +43,12 @@ fun RegisterScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.error.collect { message ->
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        viewModel.successHome.collect {
+            navController.navigate(Screen.Home) {
+                popUpTo(Screen.Login) {
+                    inclusive = true
+                }
+            }
         }
     }
 

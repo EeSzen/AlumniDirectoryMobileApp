@@ -3,6 +3,8 @@ package com.eeszen.alumnidirectoryapp.ui.screens.admin.pending
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import androidx.lifecycle.viewModelScope
+import com.eeszen.alumnidirectoryapp.core.utils.SnackbarController
+import com.eeszen.alumnidirectoryapp.core.utils.SnackbarEvent
 import com.eeszen.alumnidirectoryapp.data.model.Status
 import com.eeszen.alumnidirectoryapp.data.model.User
 import com.eeszen.alumnidirectoryapp.data.repo.AlumniRepo
@@ -30,6 +32,9 @@ class PendingRegistrationsViewModel @Inject constructor(
     fun approveUser(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             repo.updateUserStatus(id, Status.APPROVED)
+            SnackbarController.sendEvent(
+                SnackbarEvent("User with the id: $id is approved!")
+            )
         }
         getPendingUsers()
     }
@@ -37,6 +42,9 @@ class PendingRegistrationsViewModel @Inject constructor(
     fun rejectUser(id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             repo.updateUserStatus(id, Status.REJECTED)
+            SnackbarController.sendEvent(
+                SnackbarEvent("User with the id: $id is rejected!")
+            )
         }
         getPendingUsers()
     }

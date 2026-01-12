@@ -42,11 +42,11 @@ fun LoginScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
-        viewModel.error.collect { message ->
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
-        }
-    }
+//    LaunchedEffect(Unit) {
+//        viewModel.error.collect { message ->
+//            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+//        }
+//    }
 
     Box(
         modifier = Modifier

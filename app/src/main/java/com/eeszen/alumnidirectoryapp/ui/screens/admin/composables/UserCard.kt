@@ -1,6 +1,7 @@
 package com.eeszen.alumnidirectoryapp.ui.screens.admin.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -22,9 +23,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
+import coil3.compose.AsyncImage
 import com.eeszen.alumnidirectoryapp.data.model.Status
 import com.eeszen.alumnidirectoryapp.data.model.User
 
@@ -51,15 +56,33 @@ fun UserCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    modifier = Modifier
-                        .size(64.dp)
-                        .background(color = Color.White, shape = CircleShape)
-                        .align(Alignment.CenterVertically),
-                    imageVector = Icons.Default.AccountCircle,
-                    contentDescription = "",
-                    tint = Color.Black,
-                )
+                if (user.profilePhoto.isNotBlank()){
+                    AsyncImage(
+                        model = user.profilePhoto,
+                        contentDescription = "",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(64.dp)
+                            .zIndex(1f)
+                            .clip(CircleShape)
+                            .background(Color.White, CircleShape)
+                            .border(
+                                width = 1.dp,
+                                color = Color.Black,
+                                shape = CircleShape
+                            )
+                    )
+                }else {
+                    Icon(
+                        modifier = Modifier
+                            .size(64.dp)
+                            .background(color = Color.White, shape = CircleShape)
+                            .align(Alignment.CenterVertically),
+                        imageVector = Icons.Default.AccountCircle,
+                        contentDescription = "",
+                        tint = Color.Black,
+                    )
+                }
                 Column(
                     verticalArrangement = Arrangement.spacedBy(2.dp),
                     horizontalAlignment = Alignment.End

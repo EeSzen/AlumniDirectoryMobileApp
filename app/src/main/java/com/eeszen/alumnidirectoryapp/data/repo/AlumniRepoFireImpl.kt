@@ -75,6 +75,7 @@ class AlumniRepoFireImpl:AlumniRepo {
     }
 
     override suspend fun updateAlumni(id: String, user: User) {
+        Log.d("debugging", id)
         getAlumnisCollection().document(id)
             .set(user).await()
     }
