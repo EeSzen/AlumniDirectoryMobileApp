@@ -45,10 +45,6 @@ fun AppNav(
                 duration = SnackbarDuration.Short
             )
         }
-        composable<Screen.RecentApprovals> {
-            onTitleChange("Recent Approvals")
-            RecentApprovalsScreen(navController)
-        }
     }
 
     Box {
@@ -102,6 +98,10 @@ fun AppNav(
             composable<Screen.ManageUsers> {
                 onTitleChange("Manage Users")
                 ManageUsersScreen(navController)
+            }
+            composable<Screen.RecentApprovals> {
+                onTitleChange("Recent Approvals")
+                RecentApprovalsScreen(navController)
             }
         }
 
