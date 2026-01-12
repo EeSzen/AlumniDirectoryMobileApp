@@ -130,13 +130,31 @@ class AlumniRepoFireImpl:AlumniRepo {
         status: Status
     ) {
         try {
+            val updates = mutableMapOf<String, Any>(
+                "status" to status.name,
+                "updatedAt" to System.currentTimeMillis()
+            )
+            if(status == Status.APPROVED) {
+                updates["approvedAt"] = System.currentTimeMillis()
+            }
+
             getAlumnisCollection()
                 .document(id)
-                .update("status", status.name)
+                .update(updates)
                 .await()
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+    // Approved users where approvedAt is within the last 7 days
+    override suspend fun getRecentApprovedUsers(days: Int): List<User> {
+        val week = System.currentTimeMillis() - (days * 24 * 60 * 60 * 1000)
+        return getAlumnisCollection()
+            .whereEqualTo("status", Status.APPROVED.name)
+            .whereGreaterThan("approvedAt", week)
+            .get()
+            .await()
+            .toObjects(User::class.java)
     }
 
     override suspend fun updateUserPhoto(id: String, photoUrl: String) {

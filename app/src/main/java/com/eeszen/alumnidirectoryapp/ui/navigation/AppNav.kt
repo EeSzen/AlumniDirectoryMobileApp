@@ -18,6 +18,7 @@ import com.eeszen.alumnidirectoryapp.ui.screens.admin.AdminDashboardScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.admin.approved.ApprovedAlumniScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.admin.manageUsers.ManageUsersScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.admin.pending.PendingRegistrationsScreen
+import com.eeszen.alumnidirectoryapp.ui.screens.admin.recentApprovals.RecentApprovalsScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.admin.rejected.RejectedAlumniScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.home.HomeScreen
 import com.eeszen.alumnidirectoryapp.ui.screens.auth.login.LoginScreen
@@ -43,6 +44,10 @@ fun AppNav(
                 message = it.msg,
                 duration = SnackbarDuration.Short
             )
+        }
+        composable<Screen.RecentApprovals> {
+            onTitleChange("Recent Approvals")
+            RecentApprovalsScreen(navController)
         }
     }
 

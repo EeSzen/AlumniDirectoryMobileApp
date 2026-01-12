@@ -26,6 +26,8 @@ class AdminDashboardViewModel @Inject constructor(
 
     private val _allUsersCount = MutableStateFlow(0)
     val allUsersCount = _allUsersCount.asStateFlow()
+    private val _recentApprovedCount = MutableStateFlow(0)
+    val recentApprovedCount = _recentApprovedCount.asStateFlow()
 
     fun getPendingUsersCount() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -47,6 +49,12 @@ class AdminDashboardViewModel @Inject constructor(
     fun getAllUsersCount() {
         viewModelScope.launch(Dispatchers.IO) {
             _allUsersCount.value = repo.getAllAlumnis().size
+        }
+    }
+    fun getRecentApprovals() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _recentApprovedCount.value =
+                repo.getRecentApprovedUsers().size
         }
     }
 }
