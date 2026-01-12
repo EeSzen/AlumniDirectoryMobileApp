@@ -17,6 +17,8 @@ interface AlumniRepo {
     suspend fun updateUserStatus(id: String, status: Status)
     suspend fun getRecentApprovedUsers(days: Int = 7): List<User>
 
+    suspend fun updateUserPhoto(id:String, photoUrl:String)
+
     //Metadata
     suspend fun getTechStacks(): List<String>
     suspend fun getCountries(): List<String>

@@ -75,6 +75,7 @@ class AlumniRepoFireImpl:AlumniRepo {
     }
 
     override suspend fun updateAlumni(id: String, user: User) {
+        Log.d("debugging", id)
         getAlumnisCollection().document(id)
             .set(user).await()
     }
@@ -154,6 +155,13 @@ class AlumniRepoFireImpl:AlumniRepo {
             .get()
             .await()
             .toObjects(User::class.java)
+    }
+
+    override suspend fun updateUserPhoto(id: String, photoUrl: String) {
+        getAlumnisCollection()
+            .document(id)
+            .update("profilePhoto", photoUrl)
+            .await()
     }
 
     //Metadata

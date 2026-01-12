@@ -1,5 +1,6 @@
 package com.eeszen.alumnidirectoryapp.ui.screens.auth.register
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.eeszen.alumnidirectoryapp.data.model.validation.UpdateUserForm
 import com.eeszen.alumnidirectoryapp.ui.navigation.Screen
 import com.eeszen.alumnidirectoryapp.ui.theme.customOutlinedTextFieldColors
 import java.util.Calendar
@@ -113,7 +115,7 @@ fun RegisterFormScreen(
             OutlinedTextField(
                 value = fullName,
                 onValueChange = { fullName = it },
-                label = { Text("Full name") },
+                placeholder = { Text("Full name") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 colors = customOutlinedTextFieldColors()
@@ -125,7 +127,7 @@ fun RegisterFormScreen(
             OutlinedTextField(
                 value = department,
                 onValueChange = { department = it },
-                label = { Text("Department / Major") },
+                placeholder = { Text("Major") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 colors = customOutlinedTextFieldColors()
@@ -150,7 +152,7 @@ fun RegisterFormScreen(
                     value = gradYear,
                     onValueChange = { gradYear = it },
                     readOnly = true,
-                    label = { Text("Batch (year)") },
+                    placeholder = { Text("") },
                     trailingIcon = {
                         Icon(Icons.Filled.ArrowDropDown, null)
                     },
@@ -190,8 +192,7 @@ fun RegisterFormScreen(
                     OutlinedTextField(
                         value = jobTitle,
                         onValueChange = { jobTitle = it },
-                        label = { Text("Current job") },
-//                        modifier = Modifier.weight(1f),
+                        placeholder = {Text("Current job") },
                         singleLine = true,
                         colors = customOutlinedTextFieldColors()
                     )
@@ -204,8 +205,7 @@ fun RegisterFormScreen(
                     OutlinedTextField(
                         value = company,
                         onValueChange = { company = it },
-                        label = { Text("Current company") },
-//                        modifier = Modifier.weight(1f),
+                        placeholder = {Text("Current company") },
                         singleLine = true,
                         colors = customOutlinedTextFieldColors()
                     )
@@ -231,7 +231,7 @@ fun RegisterFormScreen(
                             value = country,
                             onValueChange = {},
                             readOnly = true,
-                            label = { Text("Country") },
+//                            placeholder = {Text("Country") },
                             trailingIcon = {
                                 Icon(Icons.Filled.ArrowDropDown, contentDescription = "Expand")
                             },
@@ -265,9 +265,8 @@ fun RegisterFormScreen(
                     OutlinedTextField(
                         value = city,
                         onValueChange = { city = it },
-                        label = { Text("Current city") },
+                        placeholder = {Text("Current city") },
                         singleLine = true,
-//                        modifier = Modifier.weight(1f),
                         colors = customOutlinedTextFieldColors()
                     )
                 }
@@ -279,7 +278,7 @@ fun RegisterFormScreen(
             OutlinedTextField(
                 value = techStack,
                 onValueChange = { techStack = it },
-                label = { Text("Primary tech stack") },
+//                placeholder = {Text("Primary tech stack") },
                 placeholder = { Text("e.g., Android, Backend Go, Data") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
@@ -292,7 +291,7 @@ fun RegisterFormScreen(
             OutlinedTextField(
                 value = contactPref,
                 onValueChange = { contactPref = it },
-                label = { Text("Contact preference") },
+//                placeholder = {Text("Contact preference") },
                 placeholder = { Text("e.g, email, phone, LinkedIn") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
@@ -307,7 +306,7 @@ fun RegisterFormScreen(
                 onValueChange = {
                     if (it.length <= 100) { shortBio = it }
                                 },
-                label = { Text("Short Bio (Optional)") },
+//                placeholder = {Text("Short Bio (Optional)") },
                 minLines = 3,
                 maxLines = 4,
                 modifier = Modifier.fillMaxWidth(),
@@ -316,17 +315,20 @@ fun RegisterFormScreen(
 
             Button(
                 onClick = {
-                    viewModel.updateUser(
-                        fullName = fullName,
-                        department = department,
-                        gradYear = gradYear.toInt(),
-                        jobTitle = jobTitle,
-                        company = company,
-                        techStack = techStack,
-                        country = country,
-                        city = city,
-                        contactPref = contactPref,
-                        shortBio = shortBio
+//                    Log.d("debugging", )
+                    viewModel.submit(
+                        UpdateUserForm(
+                            fullName = fullName,
+                            department = department,
+                            gradYear = if(gradYear.isNotBlank()) gradYear.toInt() else 0,
+                            jobTitle = jobTitle,
+                            company = company,
+                            techStack = techStack,
+                            country = country,
+                            city = city,
+                            contactPref = contactPref,
+                            shortBio = shortBio
+                        )
                     )
                 },
                 modifier = Modifier.padding(12.dp).fillMaxWidth(),

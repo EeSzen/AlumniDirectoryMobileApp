@@ -1,22 +1,26 @@
 package com.eeszen.alumnidirectoryapp.service
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialException
 import com.eeszen.alumnidirectoryapp.data.model.AuthUser
+import com.eeszen.alumnidirectoryapp.data.repo.AlumniRepo
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.userProfileChangeRequest
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.tasks.await
+import androidx.core.net.toUri
 
 @Singleton
 class AuthService @Inject constructor() {
@@ -34,9 +38,22 @@ class AuthService @Inject constructor() {
                 firebaseUser.uid,
                 firebaseUser.displayName ?: "Unknown",
                 firebaseUser.email ?: "Unknown",
-                firebaseUser.photoUrl.toString()
+                photoUrl = firebaseUser.photoUrl.toString()
             )
         }
+    }
+
+    suspend fun updateAuthProfilePhoto(photoUrl: String) {
+        val user = firebaseAuth.currentUser ?: return
+
+        val request = userProfileChangeRequest {
+            photoUri = photoUrl.toUri()
+        }
+
+        user.updateProfile(request).await()
+
+        // keep StateFlow in sync
+        updateUser(user)
     }
 
     // Email
